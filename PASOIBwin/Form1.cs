@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SecurityAPI;
 
 namespace PASOIBwin
 {
@@ -19,12 +20,18 @@ namespace PASOIBwin
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            //string path = "";
+            //DataBase a = new DataBase(path);
+            labelUsbCheck.Text = "✘";
+            labelUsbCheck.ForeColor = Color.Red;
         }
 
         private void Button1_Click(object sender, EventArgs e)
         {
-
+            labelUsbCheck.Text = "✓";
+            labelUsbCheck.ForeColor = Color.Green;
         }
+
+
     }
 }
