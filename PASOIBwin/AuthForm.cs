@@ -18,7 +18,7 @@ namespace PASOIBwin
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void AuthForm_Load(object sender, EventArgs e)
         {
             //string path = "";
             //DataBase a = new DataBase(path);
