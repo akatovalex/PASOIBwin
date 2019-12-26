@@ -30,6 +30,10 @@ namespace PASOIBwin
         {
             labelUsbCheck.Text = "✓";
             labelUsbCheck.ForeColor = Color.Green;
+            this.Hide();
+            Form1 workForm = new Form1();
+            workForm.ShowDialog();
+            this.ShowDialog();
         }
 
 
