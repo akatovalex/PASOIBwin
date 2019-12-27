@@ -53,7 +53,7 @@ namespace PASOIBwin
                 foreach (DataColumn column in dataT.Columns)
                 {
                     string pas = row[column].ToString();
-                    if (pas == textBoxPassword.Text)
+                    if (pas == ComputeMD5Hash(textBoxPassword.Text))
                     {
                         authTrue = true;
                     }
@@ -77,7 +77,7 @@ namespace PASOIBwin
         {
             // УДАЛИТЬ ПОТОМ
             textBoxLogin.Text = "admin";
-            textBoxPassword.Text = "21232f297a57a5a743894a0e4a801fc3";
+            textBoxPassword.Text = "admin";
         }
 
         private void AuthForm_Shown(object sender, EventArgs a)
@@ -86,7 +86,41 @@ namespace PASOIBwin
             labelUsbCheck.ForeColor = Color.Red;
         }
 
+        static string ComputeSha1Hash(string rawData)
+        {
+            // Create a SHA1   
+            using (SHA1 sha1Hash = SHA1.Create())
+            {
+                // ComputeHash - returns byte array  
+                byte[] bytes = sha1Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
 
+                // Convert byte array to a string   
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+
+        static string ComputeMD5Hash(string rawData)
+        {
+            // Create a MD5   
+            using (MD5 md5Hash = MD5.Create())
+            {
+                // ComputeHash - returns byte array  
+                byte[] bytes = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+
+                // Convert byte array to a string   
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
 
 
     }
