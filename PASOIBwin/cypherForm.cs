@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace PASOIBwin
 {
-    public partial class Form1 : Form
+    public partial class CypherForm : Form
     {
         string selectedDirectory;
         string rawDirectory;
@@ -23,7 +23,7 @@ namespace PASOIBwin
         byte[] aesKey = new byte[] { 201, 193, 179, 215, 1, 255, 234, 83, 217, 75, 198, 92, 199,
             88, 42, 244, 20, 166, 0, 39, 224, 106, 140, 225, 104, 245, 247, 17, 150, 187, 203, 252 };
 
-        public Form1()
+        public CypherForm()
         {
             InitializeComponent();
             // Если мешает, закомменть, мне удобней
@@ -260,9 +260,9 @@ using SecurityAPI;
 
 namespace PASOIBwin
 {
-    public partial class Form1 : Form
+    public partial class CypherForm : Form
     {
-        public Form1()
+        public CypherForm()
         {
             InitializeComponent();
         }

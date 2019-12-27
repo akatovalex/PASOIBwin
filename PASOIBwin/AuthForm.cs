@@ -62,12 +62,15 @@ namespace PASOIBwin
             if (authTrue)
             {
                 this.Hide();
-                Form1 workForm = new Form1();
-                workForm.ShowDialog();
+                CypherForm cypherForm = new CypherForm();
+                cypherForm.ShowDialog();
                 this.Show();
             }
             else {
                 //ЗАНОСИМ В ЖУРНАЛ
+                //datab.InsertData("journal", "[code]='-1',[login]='" + textBoxLogin.Text + "',[description]='Wrong username or password',[time]='0'");
+                //datab.InsertData("journal", "'0','-1','" + textBoxLogin.Text + "','Wrong username or password','0'");
+
                 MessageBox.Show("Неверный логин или пароль", "Ошибка!");
             }
 

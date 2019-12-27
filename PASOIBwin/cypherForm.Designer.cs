@@ -1,6 +1,6 @@
 ﻿namespace PASOIBwin
 {
-    partial class Form1
+    partial class CypherForm
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -115,7 +115,7 @@
             this.button5.Visible = false;
             this.button5.Click += new System.EventHandler(this.Button5_Click);
             // 
-            // Form1
+            // CypherForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -130,8 +130,8 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.label1);
             this.DoubleBuffered = true;
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "CypherForm";
+            this.Text = "CypherForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
