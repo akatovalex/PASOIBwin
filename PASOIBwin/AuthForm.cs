@@ -13,9 +13,16 @@ namespace PASOIBwin
 {
     public partial class AuthForm : Form
     {
+
+        public string sqlPath;
+        SecurityAPI.DataBase datab;
         public AuthForm()
         {
             InitializeComponent();
+            this.sqlPath = "‪security.sqlite";
+            datab = new SecurityAPI.DataBase(sqlPath);
+            
+
         }
 
         private void AuthForm_Load(object sender, EventArgs e)
@@ -34,7 +41,12 @@ namespace PASOIBwin
             Form1 workForm = new Form1();
             workForm.ShowDialog();
             this.ShowDialog();
+            //datab.CreateTable();
+            //datab.CreateTable("lala", "[Первичный ключ] INTEGER PRIMARY KEY, Строка STRING");
         }
+        //SecurityAPI.DataBase datab = new SecurityAPI.DataBase();
+        
+        
 
 
     }
