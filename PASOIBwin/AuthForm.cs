@@ -16,6 +16,7 @@ namespace PASOIBwin
 
         public string sqlPath;
         SecurityAPI.DataBase datab;
+        DataTable dataT;
         public AuthForm()
         {
             InitializeComponent();
@@ -33,20 +34,49 @@ namespace PASOIBwin
             labelUsbCheck.ForeColor = Color.Red;
         }
 
+        
+
         private void Button1_Click(object sender, EventArgs e)
         {
+            bool authTrue = false;
             labelUsbCheck.Text = "✓";
             labelUsbCheck.ForeColor = Color.Green;
-            this.Hide();
-            Form1 workForm = new Form1();
-            workForm.ShowDialog();
-            this.ShowDialog();
-            //datab.CreateTable();
-            //datab.CreateTable("lala", "[Первичный ключ] INTEGER PRIMARY KEY, Строка STRING");
+
+            dataT = datab.ReadData("password", "user", "[login]='"+textBoxLogin.Text+"'");
+
+            foreach (DataRow row in dataT.Rows)
+            {
+                foreach (DataColumn column in dataT.Columns)
+                {
+                    string pas = row[column].ToString();
+                    if (pas == textBoxPassword.Text)
+                    {
+                        authTrue = true;
+                    }
+                }
+            }
+            if (authTrue)
+            {
+                this.Hide();
+                Form1 workForm = new Form1();
+                workForm.ShowDialog();
+                this.Show();
+            }
+            else {
+                //ЗАНОСИМ В ЖУРНАЛ
+                MessageBox.Show("Неверный логин или пароль", "Ошибка!");
+            }
+
         }
-        //SecurityAPI.DataBase datab = new SecurityAPI.DataBase();
-        
-        
+
+        private void AuthForm_Shown(object sender, EventArgs e)
+        {
+            // УДАЛИТЬ ПОТОМ
+            textBoxLogin.Text = "admin";
+            textBoxPassword.Text = "21232f297a57a5a743894a0e4a801fc3";
+        }
+
+
 
 
     }

@@ -43,7 +43,7 @@
             this.buttonAuth.Location = new System.Drawing.Point(253, 284);
             this.buttonAuth.Name = "buttonAuth";
             this.buttonAuth.Size = new System.Drawing.Size(214, 113);
-            this.buttonAuth.TabIndex = 0;
+            this.buttonAuth.TabIndex = 2;
             this.buttonAuth.Text = "Аутентификация";
             this.buttonAuth.UseVisualStyleBackColor = true;
             this.buttonAuth.Click += new System.EventHandler(this.Button1_Click);
@@ -63,7 +63,7 @@
             this.textBoxLogin.Location = new System.Drawing.Point(281, 129);
             this.textBoxLogin.Name = "textBoxLogin";
             this.textBoxLogin.Size = new System.Drawing.Size(157, 29);
-            this.textBoxLogin.TabIndex = 2;
+            this.textBoxLogin.TabIndex = 0;
             // 
             // label1
             // 
@@ -106,7 +106,7 @@
             this.labelUsbText.TabIndex = 7;
             this.labelUsbText.Text = "USB-ключ";
             // 
-            // Form1
+            // AuthForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -118,9 +118,10 @@
             this.Controls.Add(this.textBoxLogin);
             this.Controls.Add(this.textBoxPassword);
             this.Controls.Add(this.buttonAuth);
-            this.Name = "Form1";
+            this.Name = "AuthForm";
             this.Text = "Аутентификация";
             this.Load += new System.EventHandler(this.AuthForm_Load);
+            this.Shown += new System.EventHandler(this.AuthForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
