@@ -19,13 +19,12 @@ namespace PASOIBwin
         public string sqlPath;
         SecurityAPI.DataBase datab;
         DataTable dataT;
+
         public AuthForm()
         {
             InitializeComponent();
             this.sqlPath = "‪security.sqlite";
             datab = new SecurityAPI.DataBase(sqlPath);
-            
-
         }
 
         private void AuthForm_Load(object sender, EventArgs e)
@@ -61,15 +60,23 @@ namespace PASOIBwin
             }
             if (authTrue)
             {
+                (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff");
+                datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + textBoxLogin.Text + "','Succesful authentication','"+ (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff")+"')");
                 this.Hide();
                 CypherForm cypherForm = new CypherForm();
                 cypherForm.ShowDialog();
+                datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('0', '" + textBoxLogin.Text + "','Logoff','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
                 this.Show();
             }
             else {
-                //ЗАНОСИМ В ЖУРНАЛ
-                //datab.InsertData("journal", "[code]='-1',[login]='" + textBoxLogin.Text + "',[description]='Wrong username or password',[time]='0'");
-                //datab.InsertData("journal", "'0','-1','" + textBoxLogin.Text + "','Wrong username or password','0'");
+                //спасибо, что ты есть
+                datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('-1', '"+textBoxLogin.Text+ "','Wrong username or password','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+
+                //назвал параметры - страдай и гугли негуглИмое
+                //datab.InsertData("journal [(code,login,description,time)]", "'-1','" + textBoxLogin.Text + "','Wrong username or password','0'");   
+
+                //обязательно прописать ВСЕ параметры, автоинкремент не работает
+                //datab.InsertData("journal", "'0','-1','" + textBoxLogin.Text + "','Wrong username or password','0'");     
 
                 MessageBox.Show("Неверный логин или пароль", "Ошибка!");
             }

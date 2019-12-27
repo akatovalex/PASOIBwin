@@ -69,5 +69,15 @@ namespace PASOIBwin.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Аннотация_2019_12_28_020736 {
+            get {
+                object obj = ResourceManager.GetObject("Аннотация 2019-12-28 020736", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
