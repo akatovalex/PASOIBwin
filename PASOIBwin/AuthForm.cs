@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SecurityAPI;
+using System.Security.Cryptography;
+
 
 namespace PASOIBwin
 {
@@ -41,6 +43,8 @@ namespace PASOIBwin
             bool authTrue = false;
             labelUsbCheck.Text = "✓";
             labelUsbCheck.ForeColor = Color.Green;
+            MessageBox.Show("Галочка!", "Зелёная!");
+
 
             dataT = datab.ReadData("password", "user", "[login]='"+textBoxLogin.Text+"'");
 
@@ -69,11 +73,17 @@ namespace PASOIBwin
 
         }
 
-        private void AuthForm_Shown(object sender, EventArgs e)
+        private void AuthForm_FirstShown(object sender, EventArgs e)
         {
             // УДАЛИТЬ ПОТОМ
             textBoxLogin.Text = "admin";
             textBoxPassword.Text = "21232f297a57a5a743894a0e4a801fc3";
+        }
+
+        private void AuthForm_Shown(object sender, EventArgs a)
+        {
+            labelUsbCheck.Text = "✘";
+            labelUsbCheck.ForeColor = Color.Red;
         }
 
 

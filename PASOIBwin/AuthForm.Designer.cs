@@ -108,8 +108,10 @@
             // 
             // AuthForm
             // 
+            this.AcceptButton = this.buttonAuth;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.labelUsbText);
             this.Controls.Add(this.labelUsbCheck);
@@ -121,7 +123,8 @@
             this.Name = "AuthForm";
             this.Text = "Аутентификация";
             this.Load += new System.EventHandler(this.AuthForm_Load);
-            this.Shown += new System.EventHandler(this.AuthForm_Shown);
+            this.Shown += new System.EventHandler(this.AuthForm_FirstShown);
+            this.VisibleChanged += new System.EventHandler(this.AuthForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
