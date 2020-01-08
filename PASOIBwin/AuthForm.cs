@@ -20,6 +20,7 @@ namespace PASOIBwin
         public string sqlPath;
         SecurityAPI.DataBase datab;
         DataTable dataT;
+        Timer USBTimer;
 
         static bool UsbCheck() {
             var info = DriveInfo.GetDrives();
@@ -44,16 +45,13 @@ namespace PASOIBwin
             labelUsbCheck.Text = "✘";
             labelUsbCheck.ForeColor = Color.Red;
 
-            Timer USBTimer = new Timer();
-            USBTimer.Interval = (2 * 1000); // 10 sec
+            USBTimer = new Timer();
+            USBTimer.Interval = (1 * 1000); // 1 sec
             USBTimer.Tick += new EventHandler(USBTimer_Tick);
-            USBTimer.Start();
-
         }
 
         private void USBTimer_Tick(object sender, EventArgs e)
         {
-            // оно работает даже при смене формы, что надо бы исправить по-хорошему
             if (UsbCheck()) {
                 labelUsbCheck.Text = "✓";
                 labelUsbCheck.ForeColor = Color.Green;
@@ -95,6 +93,7 @@ namespace PASOIBwin
                 if (UsbCheck()) {
                     datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + textBoxLogin.Text + "','Succesful authentication','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
                     this.Hide();
+                    USBTimer.Stop();    //Если поставить это до this.Hide, то таймер вырубается и сразу врубается обратно из-за AuthForm_Shown
                     CypherForm cypherForm = new CypherForm();
                     cypherForm.ShowDialog();
                     datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('0', '" + textBoxLogin.Text + "','Logoff','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
@@ -129,8 +128,9 @@ namespace PASOIBwin
 
         private void AuthForm_Shown(object sender, EventArgs a)
         {
-            labelUsbCheck.Text = "✘";
-            labelUsbCheck.ForeColor = Color.Red;
+            USBTimer.Start();
+            //labelUsbCheck.Text = "✘";
+            //labelUsbCheck.ForeColor = Color.Red;
         }
 
         static string ComputeSha1Hash(string rawData)
