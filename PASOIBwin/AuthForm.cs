@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SecurityAPI;
 using System.Security.Cryptography;
+using System.IO;
 
 
 namespace PASOIBwin
@@ -19,6 +20,15 @@ namespace PASOIBwin
         public string sqlPath;
         SecurityAPI.DataBase datab;
         DataTable dataT;
+
+        static bool UsbCheck() {
+            var info = DriveInfo.GetDrives();
+            foreach (var device in info) {
+                if (device.DriveType == DriveType.Removable && device.IsReady)
+                    return true;
+            }
+            return false;
+        }
 
         public AuthForm()
         {
@@ -60,13 +70,17 @@ namespace PASOIBwin
             }
             if (authTrue)
             {
-                (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff");
-                datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + textBoxLogin.Text + "','Succesful authentication','"+ (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff")+"')");
-                this.Hide();
-                CypherForm cypherForm = new CypherForm();
-                cypherForm.ShowDialog();
-                datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('0', '" + textBoxLogin.Text + "','Logoff','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
-                this.Show();
+                if (UsbCheck()) {
+                    (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff");
+                    datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + textBoxLogin.Text + "','Succesful authentication','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+                    this.Hide();
+                    CypherForm cypherForm = new CypherForm();
+                    cypherForm.ShowDialog();
+                    datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('0', '" + textBoxLogin.Text + "','Logoff','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+                    this.Show();
+                }
+                else
+                    MessageBox.Show("Вставь флешку!", "Ошибка!"); //TODO журнал
             }
             else {
                 //спасибо, что ты есть
