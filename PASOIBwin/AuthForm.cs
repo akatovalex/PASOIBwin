@@ -43,16 +43,38 @@ namespace PASOIBwin
             //DataBase a = new DataBase(path);
             labelUsbCheck.Text = "✘";
             labelUsbCheck.ForeColor = Color.Red;
+
+            Timer USBTimer = new Timer();
+            USBTimer.Interval = (2 * 1000); // 10 sec
+            USBTimer.Tick += new EventHandler(USBTimer_Tick);
+            USBTimer.Start();
+
         }
 
-        
+        private void USBTimer_Tick(object sender, EventArgs e)
+        {
+            // оно работает даже при смене формы, что надо бы исправить по-хорошему
+            if (UsbCheck()) {
+                labelUsbCheck.Text = "✓";
+                labelUsbCheck.ForeColor = Color.Green;
+            }
+            else
+            {
+                labelUsbCheck.Text = "✘";
+                labelUsbCheck.ForeColor = Color.Red;
+            }
+
+            //MessageBox.Show("The form will now be closed.", "Time Elapsed");
+            //this.Close();
+
+        }
+
 
         private void Button1_Click(object sender, EventArgs e)
         {
             bool authTrue = false;
-            labelUsbCheck.Text = "✓";
-            labelUsbCheck.ForeColor = Color.Green;
-            MessageBox.Show("Галочка!", "Зелёная!");
+
+            //MessageBox.Show("Галочка!", "Зелёная!");
 
 
             dataT = datab.ReadData("password", "user", "[login]='"+textBoxLogin.Text+"'");
@@ -71,7 +93,6 @@ namespace PASOIBwin
             if (authTrue)
             {
                 if (UsbCheck()) {
-                    (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff");
                     datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + textBoxLogin.Text + "','Succesful authentication','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
                     this.Hide();
                     CypherForm cypherForm = new CypherForm();
@@ -79,8 +100,10 @@ namespace PASOIBwin
                     datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('0', '" + textBoxLogin.Text + "','Logoff','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
                     this.Show();
                 }
-                else
+                else { 
                     MessageBox.Show("Вставь флешку!", "Ошибка!"); //TODO журнал
+                    datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('-2', '" + textBoxLogin.Text + "','No USB token found','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+                }
             }
             else {
                 //спасибо, что ты есть
