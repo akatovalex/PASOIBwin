@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
+            this.button_ExitSession = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.button_UnlockData = new System.Windows.Forms.Button();
+            this.button_ChnageFolder = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
+            this.button_ProtectData = new System.Windows.Forms.Button();
+            this.button_DecryptData = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -47,16 +47,16 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Первичная инициализация";
             // 
-            // button3
+            // button_ExitSession
             // 
-            this.button3.Location = new System.Drawing.Point(254, 336);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(197, 23);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "Выйти из сессии";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Visible = false;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button_ExitSession.Location = new System.Drawing.Point(254, 336);
+            this.button_ExitSession.Name = "button_ExitSession";
+            this.button_ExitSession.Size = new System.Drawing.Size(197, 23);
+            this.button_ExitSession.TabIndex = 3;
+            this.button_ExitSession.Text = "Выйти из сессии";
+            this.button_ExitSession.UseVisualStyleBackColor = true;
+            this.button_ExitSession.Visible = false;
+            this.button_ExitSession.Click += new System.EventHandler(this.button3_Click);
             // 
             // label2
             // 
@@ -68,52 +68,52 @@
             this.label2.Text = "Данные защищены";
             this.label2.Visible = false;
             // 
-            // button4
+            // button_UnlockData
             // 
-            this.button4.Location = new System.Drawing.Point(232, 184);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(210, 24);
-            this.button4.TabIndex = 5;
-            this.button4.Text = "Получить доступ";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Visible = false;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button_UnlockData.Location = new System.Drawing.Point(232, 184);
+            this.button_UnlockData.Name = "button_UnlockData";
+            this.button_UnlockData.Size = new System.Drawing.Size(210, 24);
+            this.button_UnlockData.TabIndex = 5;
+            this.button_UnlockData.Text = "Получить доступ";
+            this.button_UnlockData.UseVisualStyleBackColor = true;
+            this.button_UnlockData.Visible = false;
+            this.button_UnlockData.Click += new System.EventHandler(this.button4_Click);
             // 
-            // button1
+            // button_ChnageFolder
             // 
-            this.button1.Location = new System.Drawing.Point(254, 129);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(165, 49);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Выбрать защищаемую папку";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button_ChnageFolder.Location = new System.Drawing.Point(254, 129);
+            this.button_ChnageFolder.Name = "button_ChnageFolder";
+            this.button_ChnageFolder.Size = new System.Drawing.Size(165, 49);
+            this.button_ChnageFolder.TabIndex = 6;
+            this.button_ChnageFolder.Text = "Выбрать защищаемую папку";
+            this.button_ChnageFolder.UseVisualStyleBackColor = true;
+            this.button_ChnageFolder.Click += new System.EventHandler(this.button1_Click);
             // 
             // folderBrowserDialog1
             // 
             this.folderBrowserDialog1.SelectedPath = "//";
             // 
-            // button2
+            // button_ProtectData
             // 
-            this.button2.Location = new System.Drawing.Point(254, 227);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(168, 46);
-            this.button2.TabIndex = 7;
-            this.button2.Text = "Защитить данные";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Visible = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button_ProtectData.Location = new System.Drawing.Point(254, 227);
+            this.button_ProtectData.Name = "button_ProtectData";
+            this.button_ProtectData.Size = new System.Drawing.Size(168, 46);
+            this.button_ProtectData.TabIndex = 7;
+            this.button_ProtectData.Text = "Защитить данные";
+            this.button_ProtectData.UseVisualStyleBackColor = true;
+            this.button_ProtectData.Visible = false;
+            this.button_ProtectData.Click += new System.EventHandler(this.button2_Click);
             // 
-            // button5
+            // button_DecryptData
             // 
-            this.button5.Location = new System.Drawing.Point(254, 279);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(197, 40);
-            this.button5.TabIndex = 8;
-            this.button5.Text = "Разблокировать защищаемую папку и выбрать другую";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Visible = false;
-            this.button5.Click += new System.EventHandler(this.Button5_Click);
+            this.button_DecryptData.Location = new System.Drawing.Point(254, 279);
+            this.button_DecryptData.Name = "button_DecryptData";
+            this.button_DecryptData.Size = new System.Drawing.Size(197, 40);
+            this.button_DecryptData.TabIndex = 8;
+            this.button_DecryptData.Text = "Разблокировать защищаемую папку и выбрать другую";
+            this.button_DecryptData.UseVisualStyleBackColor = true;
+            this.button_DecryptData.Visible = false;
+            this.button_DecryptData.Click += new System.EventHandler(this.Button5_Click);
             // 
             // CypherForm
             // 
@@ -122,12 +122,12 @@
             this.BackgroundImage = global::PASOIBwin.Properties.Resources.cube_god_47816942widenowall;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.button4);
+            this.Controls.Add(this.button_DecryptData);
+            this.Controls.Add(this.button_ProtectData);
+            this.Controls.Add(this.button_ChnageFolder);
+            this.Controls.Add(this.button_UnlockData);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button_ExitSession);
             this.Controls.Add(this.label1);
             this.DoubleBuffered = true;
             this.Name = "CypherForm";
@@ -141,13 +141,13 @@
 
         #endregion
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button_ExitSession;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button_UnlockData;
+        private System.Windows.Forms.Button button_ChnageFolder;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button_ProtectData;
+        private System.Windows.Forms.Button button_DecryptData;
     }
 }
 

@@ -25,8 +25,10 @@ namespace PASOIBwin
         static bool UsbCheck() {
             var info = DriveInfo.GetDrives();
             foreach (var device in info) {
-                if (device.DriveType == DriveType.Removable && device.IsReady && device.VolumeLabel=="USB_SEC_KEY")
+                if (device.DriveType == DriveType.Removable && device.IsReady && device.VolumeLabel == "USB_SEC_KEY") {
+                    //MessageBox.Show(device.RootDirectory.FullName);
                     return true;
+                }
             }
             return false;
         }

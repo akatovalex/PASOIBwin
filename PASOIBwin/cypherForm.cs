@@ -27,7 +27,7 @@ namespace PASOIBwin
         {
             InitializeComponent();
             // Если мешает, закомменть, мне удобней
-            folderBrowserDialog1.SelectedPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\testDirectory\";
+            folderBrowserDialog1.SelectedPath = Directory.GetCurrentDirectory()+ @"\testDirectory\";
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -84,17 +84,17 @@ namespace PASOIBwin
                 rawDirectory = selectedDirectory.Remove(0, selectedDirectory.LastIndexOf(@"\") + 1);
                 label1.Visible = true;
                 label1.Text = "Текущий защищаемый путь: " + directoryPath;
-                button2.Visible = true;
+                button_ProtectData.Visible = true;
             }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             EncryptContentInitial();
-            button1.Visible = false;
-            button2.Visible = false;
+            button_ChnageFolder.Visible = false;
+            button_ProtectData.Visible = false;
             label1.Text = "Система сконфигурирвана. Данные защищены";
-            button4.Visible = true;
+            button_UnlockData.Visible = true;
             isInitialized = true;
             isEncrypted = true;
         }
@@ -103,9 +103,9 @@ namespace PASOIBwin
         {
             EncryptContent();
             label2.Text = "Данные защищены";
-            button4.Visible = true;
-            button3.Visible = false;
-            button5.Visible = false;
+            button_UnlockData.Visible = true;
+            button_ExitSession.Visible = false;
+            button_DecryptData.Visible = false;
             isEncrypted = true;
         }
 
@@ -116,9 +116,9 @@ namespace PASOIBwin
             label1.Visible = false;
             label2.Visible = true;
             label2.Text = "Можно юзать данные";
-            button3.Visible = true;
-            button5.Visible = true;
-            button4.Visible = false;
+            button_ExitSession.Visible = true;
+            button_DecryptData.Visible = true;
+            button_UnlockData.Visible = false;
         }
 
         string GetRawPath(string path)
@@ -232,15 +232,15 @@ namespace PASOIBwin
         {
             isEncrypted = false;
 
-            button1.Visible = true;
+            button_ChnageFolder.Visible = true;
 
             selectedDirectory = null;
 
             label1.Visible = false;
             label2.Visible = false;
-            button3.Visible = false;
-            button5.Visible = false;
-            button4.Visible = false;
+            button_ExitSession.Visible = false;
+            button_DecryptData.Visible = false;
+            button_UnlockData.Visible = false;
         }
     }
 }
