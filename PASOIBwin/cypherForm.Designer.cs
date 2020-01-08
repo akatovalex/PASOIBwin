@@ -28,24 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
+            this.label_FirstInit = new System.Windows.Forms.Label();
             this.button_ExitSession = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
+            this.label_DataProtected = new System.Windows.Forms.Label();
             this.button_UnlockData = new System.Windows.Forms.Button();
-            this.button_ChnageFolder = new System.Windows.Forms.Button();
+            this.button_ChangeFolder = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.button_ProtectData = new System.Windows.Forms.Button();
             this.button_DecryptData = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // label1
+            // label_FirstInit
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(276, 42);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(143, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Первичная инициализация";
+            this.label_FirstInit.AutoSize = true;
+            this.label_FirstInit.Location = new System.Drawing.Point(276, 42);
+            this.label_FirstInit.Name = "label_FirstInit";
+            this.label_FirstInit.Size = new System.Drawing.Size(143, 13);
+            this.label_FirstInit.TabIndex = 1;
+            this.label_FirstInit.Text = "Первичная инициализация";
             // 
             // button_ExitSession
             // 
@@ -56,17 +56,17 @@
             this.button_ExitSession.Text = "Выйти из сессии";
             this.button_ExitSession.UseVisualStyleBackColor = true;
             this.button_ExitSession.Visible = false;
-            this.button_ExitSession.Click += new System.EventHandler(this.button3_Click);
+            this.button_ExitSession.Click += new System.EventHandler(this.button_ExitSession_Click);
             // 
-            // label2
+            // label_DataProtected
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(296, 379);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(107, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Данные защищены";
-            this.label2.Visible = false;
+            this.label_DataProtected.AutoSize = true;
+            this.label_DataProtected.Location = new System.Drawing.Point(296, 379);
+            this.label_DataProtected.Name = "label_DataProtected";
+            this.label_DataProtected.Size = new System.Drawing.Size(107, 13);
+            this.label_DataProtected.TabIndex = 4;
+            this.label_DataProtected.Text = "Данные защищены";
+            this.label_DataProtected.Visible = false;
             // 
             // button_UnlockData
             // 
@@ -77,17 +77,17 @@
             this.button_UnlockData.Text = "Получить доступ";
             this.button_UnlockData.UseVisualStyleBackColor = true;
             this.button_UnlockData.Visible = false;
-            this.button_UnlockData.Click += new System.EventHandler(this.button4_Click);
+            this.button_UnlockData.Click += new System.EventHandler(this.button_UnlockData_Click);
             // 
-            // button_ChnageFolder
+            // button_ChangeFolder
             // 
-            this.button_ChnageFolder.Location = new System.Drawing.Point(254, 129);
-            this.button_ChnageFolder.Name = "button_ChnageFolder";
-            this.button_ChnageFolder.Size = new System.Drawing.Size(165, 49);
-            this.button_ChnageFolder.TabIndex = 6;
-            this.button_ChnageFolder.Text = "Выбрать защищаемую папку";
-            this.button_ChnageFolder.UseVisualStyleBackColor = true;
-            this.button_ChnageFolder.Click += new System.EventHandler(this.button1_Click);
+            this.button_ChangeFolder.Location = new System.Drawing.Point(254, 129);
+            this.button_ChangeFolder.Name = "button_ChangeFolder";
+            this.button_ChangeFolder.Size = new System.Drawing.Size(165, 49);
+            this.button_ChangeFolder.TabIndex = 6;
+            this.button_ChangeFolder.Text = "Выбрать защищаемую папку";
+            this.button_ChangeFolder.UseVisualStyleBackColor = true;
+            this.button_ChangeFolder.Click += new System.EventHandler(this.button_ChangeFolder_Click);
             // 
             // folderBrowserDialog1
             // 
@@ -102,7 +102,7 @@
             this.button_ProtectData.Text = "Защитить данные";
             this.button_ProtectData.UseVisualStyleBackColor = true;
             this.button_ProtectData.Visible = false;
-            this.button_ProtectData.Click += new System.EventHandler(this.button2_Click);
+            this.button_ProtectData.Click += new System.EventHandler(this.button_ProtectData_Click);
             // 
             // button_DecryptData
             // 
@@ -113,7 +113,7 @@
             this.button_DecryptData.Text = "Разблокировать защищаемую папку и выбрать другую";
             this.button_DecryptData.UseVisualStyleBackColor = true;
             this.button_DecryptData.Visible = false;
-            this.button_DecryptData.Click += new System.EventHandler(this.Button5_Click);
+            this.button_DecryptData.Click += new System.EventHandler(this.Button_DecryptData_Click);
             // 
             // CypherForm
             // 
@@ -124,11 +124,11 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.button_DecryptData);
             this.Controls.Add(this.button_ProtectData);
-            this.Controls.Add(this.button_ChnageFolder);
+            this.Controls.Add(this.button_ChangeFolder);
             this.Controls.Add(this.button_UnlockData);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label_DataProtected);
             this.Controls.Add(this.button_ExitSession);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.label_FirstInit);
             this.DoubleBuffered = true;
             this.Name = "CypherForm";
             this.Text = "CypherForm";
@@ -140,11 +140,11 @@
         }
 
         #endregion
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label_FirstInit;
         private System.Windows.Forms.Button button_ExitSession;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label_DataProtected;
         private System.Windows.Forms.Button button_UnlockData;
-        private System.Windows.Forms.Button button_ChnageFolder;
+        private System.Windows.Forms.Button button_ChangeFolder;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.Button button_ProtectData;
         private System.Windows.Forms.Button button_DecryptData;
