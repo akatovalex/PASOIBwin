@@ -106,5 +106,14 @@
   <ItemGroup>
     <None Include="pics\Аннотация 2019-12-28 020736.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\jerry.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\tom.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\tomNewspaper.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

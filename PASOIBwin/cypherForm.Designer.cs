@@ -36,6 +36,8 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.button_ProtectData = new System.Windows.Forms.Button();
             this.button_DecryptData = new System.Windows.Forms.Button();
+            this.listBox_ProtectedDirectories = new System.Windows.Forms.ListBox();
+            this.button_UnlockChosenDirectory = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label_FirstInit
@@ -49,9 +51,9 @@
             // 
             // button_ExitSession
             // 
-            this.button_ExitSession.Location = new System.Drawing.Point(254, 336);
+            this.button_ExitSession.Location = new System.Drawing.Point(266, 372);
             this.button_ExitSession.Name = "button_ExitSession";
-            this.button_ExitSession.Size = new System.Drawing.Size(197, 23);
+            this.button_ExitSession.Size = new System.Drawing.Size(197, 45);
             this.button_ExitSession.TabIndex = 3;
             this.button_ExitSession.Text = "Выйти из сессии";
             this.button_ExitSession.UseVisualStyleBackColor = true;
@@ -61,7 +63,7 @@
             // label_DataProtected
             // 
             this.label_DataProtected.AutoSize = true;
-            this.label_DataProtected.Location = new System.Drawing.Point(296, 379);
+            this.label_DataProtected.Location = new System.Drawing.Point(312, 66);
             this.label_DataProtected.Name = "label_DataProtected";
             this.label_DataProtected.Size = new System.Drawing.Size(107, 13);
             this.label_DataProtected.TabIndex = 4;
@@ -70,9 +72,9 @@
             // 
             // button_UnlockData
             // 
-            this.button_UnlockData.Location = new System.Drawing.Point(232, 184);
+            this.button_UnlockData.Location = new System.Drawing.Point(294, 361);
             this.button_UnlockData.Name = "button_UnlockData";
-            this.button_UnlockData.Size = new System.Drawing.Size(210, 24);
+            this.button_UnlockData.Size = new System.Drawing.Size(144, 24);
             this.button_UnlockData.TabIndex = 5;
             this.button_UnlockData.Text = "Получить доступ";
             this.button_UnlockData.UseVisualStyleBackColor = true;
@@ -81,11 +83,12 @@
             // 
             // button_ChangeFolder
             // 
-            this.button_ChangeFolder.Location = new System.Drawing.Point(254, 129);
+            this.button_ChangeFolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 28.25F);
+            this.button_ChangeFolder.Location = new System.Drawing.Point(480, 132);
             this.button_ChangeFolder.Name = "button_ChangeFolder";
-            this.button_ChangeFolder.Size = new System.Drawing.Size(165, 49);
+            this.button_ChangeFolder.Size = new System.Drawing.Size(54, 51);
             this.button_ChangeFolder.TabIndex = 6;
-            this.button_ChangeFolder.Text = "Выбрать защищаемую папку";
+            this.button_ChangeFolder.Text = "+";
             this.button_ChangeFolder.UseVisualStyleBackColor = true;
             this.button_ChangeFolder.Click += new System.EventHandler(this.button_ChangeFolder_Click);
             // 
@@ -95,33 +98,57 @@
             // 
             // button_ProtectData
             // 
-            this.button_ProtectData.Location = new System.Drawing.Point(254, 227);
+            this.button_ProtectData.Location = new System.Drawing.Point(620, 132);
             this.button_ProtectData.Name = "button_ProtectData";
-            this.button_ProtectData.Size = new System.Drawing.Size(168, 46);
+            this.button_ProtectData.Size = new System.Drawing.Size(168, 51);
             this.button_ProtectData.TabIndex = 7;
-            this.button_ProtectData.Text = "Защитить данные";
+            this.button_ProtectData.Text = "Защитить новые данные (Надо кардинально переделать)";
             this.button_ProtectData.UseVisualStyleBackColor = true;
             this.button_ProtectData.Visible = false;
             this.button_ProtectData.Click += new System.EventHandler(this.button_ProtectData_Click);
             // 
             // button_DecryptData
             // 
-            this.button_DecryptData.Location = new System.Drawing.Point(254, 279);
+            this.button_DecryptData.Location = new System.Drawing.Point(575, 349);
             this.button_DecryptData.Name = "button_DecryptData";
-            this.button_DecryptData.Size = new System.Drawing.Size(197, 40);
+            this.button_DecryptData.Size = new System.Drawing.Size(213, 56);
             this.button_DecryptData.TabIndex = 8;
             this.button_DecryptData.Text = "Разблокировать защищаемую папку и выбрать другую";
             this.button_DecryptData.UseVisualStyleBackColor = true;
             this.button_DecryptData.Visible = false;
             this.button_DecryptData.Click += new System.EventHandler(this.Button_DecryptData_Click);
             // 
+            // listBox_ProtectedDirectories
+            // 
+            this.listBox_ProtectedDirectories.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.listBox_ProtectedDirectories.FormattingEnabled = true;
+            this.listBox_ProtectedDirectories.HorizontalScrollbar = true;
+            this.listBox_ProtectedDirectories.ItemHeight = 17;
+            this.listBox_ProtectedDirectories.Location = new System.Drawing.Point(84, 132);
+            this.listBox_ProtectedDirectories.Name = "listBox_ProtectedDirectories";
+            this.listBox_ProtectedDirectories.Size = new System.Drawing.Size(379, 157);
+            this.listBox_ProtectedDirectories.TabIndex = 9;
+            // 
+            // button_UnlockChosenDirectory
+            // 
+            this.button_UnlockChosenDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.button_UnlockChosenDirectory.Location = new System.Drawing.Point(84, 298);
+            this.button_UnlockChosenDirectory.Name = "button_UnlockChosenDirectory";
+            this.button_UnlockChosenDirectory.Size = new System.Drawing.Size(379, 57);
+            this.button_UnlockChosenDirectory.TabIndex = 10;
+            this.button_UnlockChosenDirectory.Text = "Временно получить доступ к выбранной директории (НЕ РАБОТАЕТ)";
+            this.button_UnlockChosenDirectory.UseVisualStyleBackColor = true;
+            this.button_UnlockChosenDirectory.Click += new System.EventHandler(this.Button_UnlockChosenDirectory_Click);
+            // 
             // CypherForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::PASOIBwin.Properties.Resources.cube_god_47816942widenowall;
+            this.BackgroundImage = global::PASOIBwin.Properties.Resources.tom;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button_UnlockChosenDirectory);
+            this.Controls.Add(this.listBox_ProtectedDirectories);
             this.Controls.Add(this.button_DecryptData);
             this.Controls.Add(this.button_ProtectData);
             this.Controls.Add(this.button_ChangeFolder);
@@ -131,6 +158,7 @@
             this.Controls.Add(this.label_FirstInit);
             this.DoubleBuffered = true;
             this.Name = "CypherForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "CypherForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -148,6 +176,8 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.Button button_ProtectData;
         private System.Windows.Forms.Button button_DecryptData;
+        private System.Windows.Forms.ListBox listBox_ProtectedDirectories;
+        private System.Windows.Forms.Button button_UnlockChosenDirectory;
     }
 }
 

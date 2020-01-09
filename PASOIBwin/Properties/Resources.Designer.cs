@@ -73,6 +73,36 @@ namespace PASOIBwin.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap jerry {
+            get {
+                object obj = ResourceManager.GetObject("jerry", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tom {
+            get {
+                object obj = ResourceManager.GetObject("tom", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tomNewspaper {
+            get {
+                object obj = ResourceManager.GetObject("tomNewspaper", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Аннотация_2019_12_28_020736 {
             get {
                 object obj = ResourceManager.GetObject("Аннотация 2019-12-28 020736", resourceCulture);

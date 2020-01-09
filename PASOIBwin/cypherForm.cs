@@ -28,6 +28,7 @@ namespace PASOIBwin
             InitializeComponent();
             // Если мешает, закомменть, мне удобней
             folderBrowserDialog1.SelectedPath = Directory.GetCurrentDirectory()+ @"\testDirectory\";
+            listBox_ProtectedDirectories.Items.Add(Directory.GetCurrentDirectory() + @"\testDirectory\");
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -93,16 +94,25 @@ namespace PASOIBwin
             EncryptContentInitial();
             button_ChangeFolder.Visible = false;
             button_ProtectData.Visible = false;
+            button_UnlockChosenDirectory.Visible = false;
+            listBox_ProtectedDirectories.Visible = false;
+
+            this.BackgroundImage = Properties.Resources.jerry;
             label_FirstInit.Text = "Система сконфигурирвана. Данные защищены";
             button_UnlockData.Visible = true;
             isInitialized = true;
             isEncrypted = true;
+
+            // СДЕЛАЙ ТАК, ЧТОБЫ ПРИ НАЖАТИИ ЭТОЙ КНОПКИ ListBox пополнялся новым элементом, а новый каталог шифровался (И ВСЁ, ОСТАЁМСЯ НА ЭТОМ ЭКРАНЕ)    
+            // (можно сделать тупо по нажатию плюса, но не стоит, так всё себе перешифруешь случайно)
+            // Код сверху надо переделать или удалить, но временно оставим
         }
 
         private void button_ExitSession_Click(object sender, EventArgs e)
         {
             EncryptContent();
             label_DataProtected.Text = "Данные защищены";
+            this.BackgroundImage = Properties.Resources.jerry;
             button_UnlockData.Visible = true;
             button_ExitSession.Visible = false;
             button_DecryptData.Visible = false;
@@ -115,6 +125,7 @@ namespace PASOIBwin
             isEncrypted = false;
             label_FirstInit.Visible = false;
             label_DataProtected.Visible = true;
+            this.BackgroundImage = Properties.Resources.tomNewspaper;
             label_DataProtected.Text = "Можно юзать данные";
             button_ExitSession.Visible = true;
             button_DecryptData.Visible = true;
@@ -233,14 +244,30 @@ namespace PASOIBwin
             isEncrypted = false;
 
             button_ChangeFolder.Visible = true;
+            button_UnlockChosenDirectory.Visible = true;
+            listBox_ProtectedDirectories.Visible = true;
 
             selectedDirectory = null;
+            this.BackgroundImage = Properties.Resources.tom;
 
             label_FirstInit.Visible = false;
             label_DataProtected.Visible = false;
             button_ExitSession.Visible = false;
             button_DecryptData.Visible = false;
             button_UnlockData.Visible = false;
+        }
+
+        private void Button_UnlockChosenDirectory_Click(object sender, EventArgs e) {
+            // Пересылает на экран с кнопкой "Выйти из сессии"
+            // Содержит кнопку "Разблокировать навсегда" (такой же экран, как сейчас уже есть в проге - Том с газетой)
+            // Кнопка "разблокировать навсегда" удаляет каталог из listBox, возвращает на главный экран и не шифрует файлы; "Выйти из сессии" шифрует и возвращает на главный экран
+            if (listBox_ProtectedDirectories.SelectedIndex<0) {
+                //Кнопка недоступна должна быть
+                MessageBox.Show("Choose something already");
+            }
+            else {
+                MessageBox.Show("Good choice");
+            }
         }
     }
 }
