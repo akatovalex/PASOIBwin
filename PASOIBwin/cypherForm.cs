@@ -23,12 +23,28 @@ namespace PASOIBwin
         byte[] aesKey = new byte[] { 201, 193, 179, 215, 1, 255, 234, 83, 217, 75, 198, 92, 199,
             88, 42, 244, 20, 166, 0, 39, 224, 106, 140, 225, 104, 245, 247, 17, 150, 187, 203, 252 };
 
+        public string sqlPathDirectories;
+        SecurityAPI.DataBase dbDirectories;
+        DataTable dtDirectories;
+
+
         public CypherForm()
         {
             InitializeComponent();
-            // Если мешает, закомменть, мне удобней
-            folderBrowserDialog1.SelectedPath = Directory.GetCurrentDirectory()+ @"\testDirectory\";
+            folderBrowserDialog1.SelectedPath = Directory.GetCurrentDirectory() + @"\testDirectory\";    // Если мешает, закомменть, мне удобней
             listBox_ProtectedDirectories.Items.Add(Directory.GetCurrentDirectory() + @"\testDirectory\");
+
+
+            this.sqlPathDirectories = "‪protectedfiles.sqlite";
+            dbDirectories = new SecurityAPI.DataBase(sqlPathDirectories);
+
+            //dtDirectories = dbDirectories.ReadData("path", "directories");        //NO SUCH TABLE? ? ? ? ?? ? ? ? ? ? ? ?? ? ?
+
+            //foreach (DataRow row in dtDirectories.Rows) {
+            //    foreach (DataColumn column in dtDirectories.Columns) {
+            //        listBox_ProtectedDirectories.Items.Add(row[column].ToString());
+            //    }
+            //}
         }
 
         private void Form1_Load(object sender, EventArgs e)
