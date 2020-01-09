@@ -11,12 +11,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PASOIBwin
-{
-    public partial class CypherForm : Form
-    {
-        string selectedDirectory;
-        string rawDirectory;
+namespace PASOIBwin {
+    public partial class CypherForm : Form {
+        string SelectedDirectory { get; set; }
+        string RawDirectory { get { return SelectedDirectory?.Remove(0, SelectedDirectory.LastIndexOf(@"\") + 1); } }
         string directoryPath;
         bool isEncrypted = false;
         bool isInitialized = false;
@@ -28,61 +26,96 @@ namespace PASOIBwin
         DataTable dtDirectories;
 
 
-        public CypherForm()
-        {
+        public CypherForm(bool isAdmin, byte[] encryptionKey) {
             InitializeComponent();
             //folderBrowserDialog1.SelectedPath = Directory.GetCurrentDirectory() + @"\testDirectory\";    // Если мешает, закомменть, мне удобней
-            listBox_ProtectedDirectories.Items.Add(Directory.GetCurrentDirectory() + @"\testDirectory\");
+            //listBox_ProtectedDirectories.Items.Add(Directory.GetCurrentDirectory() + @"\testDirectory\");
 
 
-            this.sqlPathDirectories = "‪protectedfiles.sqlite";
+            sqlPathDirectories = "‪protectedfiles.sqlite";
             dbDirectories = new SecurityAPI.DataBase(sqlPathDirectories);
 
             string keyHash = "df6670833b208a10561f74be3f79a279";    //Данный хэш надо считывать с флешки, рядом с ключом для дешифрования каталогов
-            dtDirectories = dbDirectories.ReadData("path", "directories", "[encrypted]='" + 1 + "' AND [keyhash]='" + keyHash +"'");
+            dtDirectories = dbDirectories.ReadData("path", "directories", "[encrypted]='" + 1 + "' AND [keyhash]='" + keyHash + "'");
 
             foreach (DataRow row in dtDirectories.Rows) {
                 foreach (DataColumn column in dtDirectories.Columns) {
-                    listBox_ProtectedDirectories.Items.Add(row[column].ToString()+@"\");
+                    listBox_ProtectedDirectories.Items.Add(row[column].ToString() + @"\");
                 }
             }
+
+            aesKey = encryptionKey;
+            //if (!isAdmin)
+                //GoToUserUI();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
+        void GoToAdminUI() {
+
+        }
+        void GoToUserUI() {
+            //from button_ChangeFolder_Click
+            directoryPath = listBox_ProtectedDirectories.Items[0].ToString();
+            if (!string.IsNullOrEmpty(directoryPath)) {
+                //Чтобы случайно не зашифровать себе локальный диск
+                if (directoryPath.Length > 4) {
+                    SelectedDirectory = directoryPath;
+                    label_FirstInit.Visible = true;
+                    label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
+                    button_ProtectData.Visible = true;
+                }
+                else {
+                    directoryPath = null;
+                    SelectedDirectory = null;
+                    button_ProtectData.Visible = false;
+
+                    label_FirstInit.Visible = true;
+                    label_FirstInit.Text = "Каталог не выбран";
+                }
+            }
+            //from button_ProtectData_Click
+            button_ChangeFolder.Visible = false;
+            button_ProtectData.Visible = false;
+            button_UnlockChosenDirectory.Visible = false;
+            listBox_ProtectedDirectories.Visible = false;
+            //from button_UnlockData_Click
+            DecryptContent();
+            isEncrypted = false;
+            label_FirstInit.Visible = false;
+            label_DataProtected.Visible = true;
+            this.BackgroundImage = Properties.Resources.tomNewspaper;
+            label_DataProtected.Text = "Можно юзать данные";
+            button_ExitSession.Visible = true;
+            button_DecryptData.Visible = true;
+            button_UnlockData.Visible = false;
+        }
+
+        private void Form1_Load(object sender, EventArgs e) {
             label_FirstInit.Visible = true;
             label_FirstInit.Text = "Каталог не выбран";
         }
 
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-        {
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e) {
             //Штатное завершение:
             //при закрытии зашифровать и удалить резервную копию
             //Экстренное завершение:
             //удалить защищаемую папку и оставить резервную копию
-            if (isInitialized)
-            {
-                if (isEncrypted)
-                {
-                    if (Directory.Exists(rawDirectory))
-                        Directory.Delete(rawDirectory, true);
+            if (isInitialized) {
+                if (isEncrypted) {
+                    if (Directory.Exists(RawDirectory))
+                        Directory.Delete(RawDirectory, true);
                 }
-                else
-                {
+                else {
                     var reason = e.CloseReason;
-                    if (Directory.Exists(selectedDirectory))
-                    {
+                    if (Directory.Exists(SelectedDirectory)) {
                         if (reason == CloseReason.TaskManagerClosing)
-                            Directory.Delete(selectedDirectory);
-                        else
-                        {
+                            Directory.Delete(SelectedDirectory);
+                        else {
                             //EncryptContent();             //Пока что только мешает, т.к. дешифровать обратно невозможно
-                            if (Directory.Exists(rawDirectory))
-                                Directory.Delete(rawDirectory, true);
+                            if (Directory.Exists(RawDirectory))
+                                Directory.Delete(RawDirectory, true);
                         }
                     }
-                    else
-                    {
+                    else {
                         //sanya nagovnokodil
                     }
 
@@ -92,35 +125,34 @@ namespace PASOIBwin
             MessageBox.Show(reason1.ToString());
         }
 
-        private void button_ChangeFolder_Click(object sender, EventArgs e)
-        {
+        private void button_ChangeFolder_Click(object sender, EventArgs e) {
 
-            folderBrowserDialog1.ShowDialog();
-            directoryPath = folderBrowserDialog1.SelectedPath;
-            if (!string.IsNullOrEmpty(directoryPath)) {
-                //Чтобы случайно не зашифровать себе локальный диск
-                if (directoryPath.Length>4) {
-                    selectedDirectory = directoryPath;
-                    rawDirectory = selectedDirectory.Remove(0, selectedDirectory.LastIndexOf(@"\") + 1);        // ну и костыли с удалением "\"
-                    label_FirstInit.Visible = true;
-                    label_FirstInit.Text = "Текущий защищаемый путь: " + selectedDirectory;
-                    button_ProtectData.Visible = true;
-                }
-                else {
-                    directoryPath = null;
-                    selectedDirectory = null;
-                    rawDirectory = null;
-                    button_ProtectData.Visible = false;
+            //folderBrowserDialog1.ShowDialog();
+            //directoryPath = folderBrowserDialog1.SelectedPath; //DEBUG
+            int selectedIndex = listBox_ProtectedDirectories.SelectedIndex;
+            if (selectedIndex != -1) {
+                directoryPath = listBox_ProtectedDirectories.Items[selectedIndex].ToString();
+                if (!string.IsNullOrEmpty(directoryPath)) {
+                    //Чтобы случайно не зашифровать себе локальный диск
+                    if (directoryPath.Length > 4) {
+                        SelectedDirectory = directoryPath;
+                        label_FirstInit.Visible = true;
+                        label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
+                        button_ProtectData.Visible = true;
+                    }
+                    else {
+                        directoryPath = null;
+                        SelectedDirectory = null;
+                        button_ProtectData.Visible = false;
 
-                    label_FirstInit.Visible = true;
-                    label_FirstInit.Text = "Каталог не выбран";
+                        label_FirstInit.Visible = true;
+                        label_FirstInit.Text = "Каталог не выбран";
+                    }
                 }
             }
-
         }
 
-        private void button_ProtectData_Click(object sender, EventArgs e)
-        {
+        private void button_ProtectData_Click(object sender, EventArgs e) {
             EncryptContentInitial();
             button_ChangeFolder.Visible = false;
             button_ProtectData.Visible = false;
@@ -138,8 +170,7 @@ namespace PASOIBwin
             // Код сверху надо переделать или удалить, но временно оставим
         }
 
-        private void button_ExitSession_Click(object sender, EventArgs e)
-        {
+        private void button_ExitSession_Click(object sender, EventArgs e) {
             EncryptContent();
             label_DataProtected.Text = "Данные защищены";
             this.BackgroundImage = Properties.Resources.jerry;
@@ -149,8 +180,7 @@ namespace PASOIBwin
             isEncrypted = true;
         }
 
-        private void button_UnlockData_Click(object sender, EventArgs e)
-        {
+        private void button_UnlockData_Click(object sender, EventArgs e) {
             DecryptContent();
             isEncrypted = false;
             label_FirstInit.Visible = false;
@@ -162,17 +192,12 @@ namespace PASOIBwin
             button_UnlockData.Visible = false;
         }
 
-        string GetRawPath(string path)
-        {
-            return path.Remove(0, path.LastIndexOf(rawDirectory));
+        string GetRawPath(string path) {
+            return path.Remove(0, path.LastIndexOf(RawDirectory));
         }
-        void EncryptContentBase(string path, Action<string> mode, bool needBackUp)
-        {
+        void EncryptContentBase(string path, Action<string> mode, bool needBackUp) {
             if (needBackUp)
                 Directory.CreateDirectory(GetRawPath(path));
-
-
-
             var directories = Directory.EnumerateDirectories(path);
             foreach (var dir in directories)
                 EncryptContentBase(dir, mode, needBackUp);
@@ -180,105 +205,42 @@ namespace PASOIBwin
             foreach (var file in files)
                 mode(file);
         }
-        void EncryptContentInitial()
-        {
-            EncryptContentBase(selectedDirectory, f => EncryptFileBase(f, File.ReadAllBytes(f), d => ToAes256(d)), false);
+        void EncryptContentInitial() {
+            EncryptContentBase(SelectedDirectory, f => EncryptFileBase(f, File.ReadAllBytes(f), d => Encrypting.ToAes256(d, aesKey)), false);
         }
-        void EncryptContent()
-        {
+        void EncryptContent() {
             EncryptContentInitial();
         }
-        void DecryptContent()
-        {
-            EncryptContentBase(selectedDirectory, f => DecryptFile(f), true);
+        void DecryptContent() {
+            EncryptContentBase(SelectedDirectory, f => DecryptFile(f), true);
         }
-        void EncryptFileBase(string fileName, byte[] data, Func<byte[], byte[]> transformation)
-        {
-            using (FileStream stream = new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite))
-            {
+        void EncryptFileBase(string fileName, byte[] data, Func<byte[], byte[]> transformation) {
+            using (FileStream stream = new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite)) {
                 byte[] transformedData = transformation(data);
                 stream.Write(transformedData, 0, transformedData.Length);
                 stream.Close();
             }
         }
-        void EncryptFile(string fileName)
-        {
-            EncryptFileBase(fileName, File.ReadAllBytes(fileName), d => ToAes256(d));
+        void EncryptFile(string fileName) {
+            EncryptFileBase(fileName, File.ReadAllBytes(fileName), d => Encrypting.ToAes256(d, aesKey));
         }
-        void DecryptFile(string fileName)
-        {
+        void DecryptFile(string fileName) {
             byte[] data = File.ReadAllBytes(fileName);
-            using (FileStream stream = new FileStream(GetRawPath(fileName), FileMode.Create, FileAccess.ReadWrite))
-            {
+            using (FileStream stream = new FileStream(GetRawPath(fileName), FileMode.Create, FileAccess.ReadWrite)) {
                 stream.Write(data, 0, data.Length);
                 stream.Close();
             }
-            EncryptFileBase(fileName, data, d => FromAes256(d));
+            EncryptFileBase(fileName, data, d => Encrypting.FromAes256(d, aesKey));
         }
-
-        public byte[] ToAes256(byte[] src)
-        {
-            //Объявляем объект класса AES
-            Aes aes = Aes.Create();
-            //Генерируем соль
-            aes.GenerateIV();
-            //Присваиваем ключ. aeskey - переменная (массив байт), сгенерированная методом GenerateKey() класса AES
-            //aes.GenerateKey();
-            aes.Key = aesKey;
-            byte[] encrypted;
-            ICryptoTransform crypt = aes.CreateEncryptor(aes.Key, aes.IV);
-            using (MemoryStream ms = new MemoryStream())
-            {
-                using (CryptoStream cs = new CryptoStream(ms, crypt, CryptoStreamMode.Write))
-                {
-                    using (BinaryWriter writer = new BinaryWriter(cs))
-                        writer.Write(src);
-                }
-                //Записываем в переменную encrypted зашиврованный поток байтов
-                encrypted = ms.ToArray();
-            }
-            //Возвращаем поток байт + крепим соль
-            return encrypted.Concat(aes.IV).ToArray();
-        }
-        public byte[] FromAes256(byte[] shifr)
-        {
-            byte[] bytesIv = new byte[16];
-            byte[] mess = new byte[shifr.Length - 16];
-            //Списываем соль
-            for (int i = shifr.Length - 16, j = 0; i < shifr.Length; i++, j++)
-                bytesIv[j] = shifr[i];
-            //Списываем оставшуюся часть сообщения
-            for (int i = 0; i < shifr.Length - 16; i++)
-                mess[i] = shifr[i];
-            //Объект класса Aes
-            Aes aes = Aes.Create();
-            //Задаем тот же ключ, что и для шифрования
-            aes.Key = aesKey;
-            //Задаем соль
-            aes.IV = bytesIv;
-            byte[] result;
-            ICryptoTransform crypt = aes.CreateDecryptor(aes.Key, aes.IV);
-            using (MemoryStream ms = new MemoryStream(mess))
-            {
-                using (CryptoStream cs = new CryptoStream(ms, crypt, CryptoStreamMode.Read))
-                {
-                    using (BinaryReader sr = new BinaryReader(cs))
-                        result = sr.ReadBytes(mess.Length);
-                }
-            }
-            return result;
-        }
-
-        private void Button_DecryptData_Click(object sender, EventArgs e)
-        {
+                
+        private void Button_DecryptData_Click(object sender, EventArgs e) {
             isEncrypted = false;
 
             button_ChangeFolder.Visible = true;
             button_UnlockChosenDirectory.Visible = true;
             listBox_ProtectedDirectories.Visible = true;
 
-            selectedDirectory = null;
-            rawDirectory = null;
+            SelectedDirectory = null;
             directoryPath = null;
             this.BackgroundImage = Properties.Resources.tom;
 
@@ -296,66 +258,34 @@ namespace PASOIBwin
             // Пересылает на экран с кнопкой "Выйти из сессии"
             // Содержит кнопку "Разблокировать навсегда" (такой же экран, как сейчас уже есть в проге - Том с газетой)
             // Кнопка "разблокировать навсегда" удаляет каталог из listBox, возвращает на главный экран и не шифрует файлы; "Выйти из сессии" шифрует и возвращает на главный экран
-            if (listBox_ProtectedDirectories.SelectedIndex<0) {
+            if (listBox_ProtectedDirectories.SelectedIndex < 0) {
                 //Кнопка недоступна должна быть
                 MessageBox.Show("Choose something already");
             }
             else {
                 //Временно
-                string selectedDir = listBox_ProtectedDirectories.SelectedItem.ToString();
-                MessageBox.Show("Выбран каталог для шифрования (в будущем для дешифрования - дальше врубается менюшка Тома с газетой):\n"+selectedDir);
+                SelectedDirectory = listBox_ProtectedDirectories.SelectedItem.ToString();
+                //MessageBox.Show("Выбран каталог для шифрования (в будущем для дешифрования - дальше врубается менюшка Тома с газетой):\n" + selectedDir);
 
-                selectedDirectory = selectedDir;
-                label_FirstInit.Text = "Выбран каталог: " + selectedDirectory;
-                label_FirstInit.Visible = true;
+                //label_FirstInit.Text = "Выбран каталог: " + selectedDirectory;
+                //label_FirstInit.Visible = true;
 
-                rawDirectory = selectedDirectory.Remove(0, selectedDirectory.LastIndexOf(@"\") + 1);        // ну и костыли с удалением "\"
+                //rawDirectory = selectedDirectory.Remove(0, selectedDirectory.LastIndexOf(@"\") + 1);        // ну и костыли с удалением "\"
 
 
-                button_ProtectData.Visible = true;
+                //button_ProtectData.Visible = true;
 
+                DecryptContent();
+                isInitialized = true;
+                isEncrypted = false;
+                label_FirstInit.Visible = false;
+                label_DataProtected.Visible = true;
+                this.BackgroundImage = Properties.Resources.tomNewspaper;
+                label_DataProtected.Text = "Можно юзать данные";
+                button_ExitSession.Visible = true;
+                button_DecryptData.Visible = true;
+                button_UnlockData.Visible = false;
             }
         }
     }
 }
-
-
-
-/*using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using SecurityAPI;
-
-namespace PASOIBwin
-{
-    public partial class CypherForm : Form
-    {
-        public CypherForm()
-        {
-            InitializeComponent();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            //string path = "";
-            //DataBase a = new DataBase(path);
-            labelUsbCheck.Text = "✘";
-            labelUsbCheck.ForeColor = Color.Red;
-        }
-
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            labelUsbCheck.Text = "✓";
-            labelUsbCheck.ForeColor = Color.Green;
-        }
-
-
-    }
-}
-*/

@@ -69,6 +69,7 @@
     <Compile Include="CypherForm.Designer.cs">
       <DependentUpon>CypherForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Encrypting.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AuthForm.resx">
