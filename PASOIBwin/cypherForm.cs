@@ -38,7 +38,8 @@ namespace PASOIBwin
             this.sqlPathDirectories = "‪protectedfiles.sqlite";
             dbDirectories = new SecurityAPI.DataBase(sqlPathDirectories);
 
-            dtDirectories = dbDirectories.ReadData("path", "directories", "[encrypted]='" + 1 +"'");
+            string keyHash = "df6670833b208a10561f74be3f79a279";    //Данный хэш надо считывать с флешки, рядом с ключом для дешифрования каталогов
+            dtDirectories = dbDirectories.ReadData("path", "directories", "[encrypted]='" + 1 + "' AND [keyhash]='" + keyHash +"'");
 
             foreach (DataRow row in dtDirectories.Rows) {
                 foreach (DataColumn column in dtDirectories.Columns) {
