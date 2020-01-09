@@ -75,7 +75,7 @@ namespace PASOIBwin
                             Directory.Delete(selectedDirectory);
                         else
                         {
-                            EncryptContent();
+                            //EncryptContent();             //Пока что только мешает, т.к. дешифровать обратно невозможно
                             if (Directory.Exists(rawDirectory))
                                 Directory.Delete(rawDirectory, true);
                         }
