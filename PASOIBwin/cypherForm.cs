@@ -38,18 +38,19 @@ namespace PASOIBwin
             this.sqlPathDirectories = "‪protectedfiles.sqlite";
             dbDirectories = new SecurityAPI.DataBase(sqlPathDirectories);
 
-            dtDirectories = dbDirectories.ReadData("path", "directories");
+            dtDirectories = dbDirectories.ReadData("path", "directories", "[encrypted]='" + 1 +"'");
 
             foreach (DataRow row in dtDirectories.Rows) {
                 foreach (DataColumn column in dtDirectories.Columns) {
-                    listBox_ProtectedDirectories.Items.Add(row[column].ToString());
+                    listBox_ProtectedDirectories.Items.Add(row[column].ToString()+@"\");
                 }
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            label_FirstInit.Visible = true;
+            label_FirstInit.Text = "Каталог не выбран";
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -98,7 +99,7 @@ namespace PASOIBwin
             if (!string.IsNullOrEmpty(directoryPath))
             {
                 selectedDirectory = directoryPath;
-                rawDirectory = selectedDirectory.Remove(0, selectedDirectory.LastIndexOf(@"\") + 1);
+                rawDirectory = selectedDirectory.Remove(0, selectedDirectory.LastIndexOf(@"\") + 1);        // ну и костыли с удалением "\"
                 label_FirstInit.Visible = true;
                 label_FirstInit.Text = "Текущий защищаемый путь: " + directoryPath;
                 button_ProtectData.Visible = true;
@@ -266,7 +267,10 @@ namespace PASOIBwin
             selectedDirectory = null;
             this.BackgroundImage = Properties.Resources.tom;
 
-            label_FirstInit.Visible = false;
+            label_FirstInit.Visible = true;
+            label_FirstInit.Text = "Каталог не выбран";
+
+
             label_DataProtected.Visible = false;
             button_ExitSession.Visible = false;
             button_DecryptData.Visible = false;
@@ -282,7 +286,19 @@ namespace PASOIBwin
                 MessageBox.Show("Choose something already");
             }
             else {
-                MessageBox.Show("Good choice");
+                //Временно
+                string selectedDir = listBox_ProtectedDirectories.SelectedItem.ToString();
+                MessageBox.Show("Выбран каталог для шифрования (в будущем для дешифрования - дальше врубается менюшка Тома с газетой):\n"+selectedDir);
+
+                selectedDirectory = selectedDir;
+                label_FirstInit.Text = "Выбран каталог: " + selectedDirectory;
+                label_FirstInit.Visible = true;
+
+                rawDirectory = selectedDirectory.Remove(0, selectedDirectory.LastIndexOf(@"\") + 1);        // ну и костыли с удалением "\"
+
+
+                button_ProtectData.Visible = true;
+
             }
         }
     }
