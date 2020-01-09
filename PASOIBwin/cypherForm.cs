@@ -38,13 +38,13 @@ namespace PASOIBwin
             this.sqlPathDirectories = "‪protectedfiles.sqlite";
             dbDirectories = new SecurityAPI.DataBase(sqlPathDirectories);
 
-            //dtDirectories = dbDirectories.ReadData("path", "directories");        //NO SUCH TABLE? ? ? ? ?? ? ? ? ? ? ? ?? ? ?
+            dtDirectories = dbDirectories.ReadData("path", "directories");
 
-            //foreach (DataRow row in dtDirectories.Rows) {
-            //    foreach (DataColumn column in dtDirectories.Columns) {
-            //        listBox_ProtectedDirectories.Items.Add(row[column].ToString());
-            //    }
-            //}
+            foreach (DataRow row in dtDirectories.Rows) {
+                foreach (DataColumn column in dtDirectories.Columns) {
+                    listBox_ProtectedDirectories.Items.Add(row[column].ToString());
+                }
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
