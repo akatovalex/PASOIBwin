@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CypherForm));
             this.label_FirstInit = new System.Windows.Forms.Label();
             this.button_ExitSession = new System.Windows.Forms.Button();
             this.label_DataProtected = new System.Windows.Forms.Label();
@@ -157,6 +158,7 @@
             this.Controls.Add(this.button_ExitSession);
             this.Controls.Add(this.label_FirstInit);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CypherForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "CypherForm";
