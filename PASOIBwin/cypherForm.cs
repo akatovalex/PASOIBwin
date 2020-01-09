@@ -96,14 +96,26 @@ namespace PASOIBwin
 
             folderBrowserDialog1.ShowDialog();
             directoryPath = folderBrowserDialog1.SelectedPath;
-            if (!string.IsNullOrEmpty(directoryPath))
-            {
-                selectedDirectory = directoryPath;
-                rawDirectory = selectedDirectory.Remove(0, selectedDirectory.LastIndexOf(@"\") + 1);        // ну и костыли с удалением "\"
-                label_FirstInit.Visible = true;
-                label_FirstInit.Text = "Текущий защищаемый путь: " + directoryPath;
-                button_ProtectData.Visible = true;
+            if (!string.IsNullOrEmpty(directoryPath)) {
+                //Чтобы случайно не зашифровать себе локальный диск
+                if (directoryPath.Length>4) {
+                    selectedDirectory = directoryPath;
+                    rawDirectory = selectedDirectory.Remove(0, selectedDirectory.LastIndexOf(@"\") + 1);        // ну и костыли с удалением "\"
+                    label_FirstInit.Visible = true;
+                    label_FirstInit.Text = "Текущий защищаемый путь: " + selectedDirectory;
+                    button_ProtectData.Visible = true;
+                }
+                else {
+                    directoryPath = null;
+                    selectedDirectory = null;
+                    rawDirectory = null;
+                    button_ProtectData.Visible = false;
+
+                    label_FirstInit.Visible = true;
+                    label_FirstInit.Text = "Каталог не выбран";
+                }
             }
+
         }
 
         private void button_ProtectData_Click(object sender, EventArgs e)
@@ -265,6 +277,7 @@ namespace PASOIBwin
             listBox_ProtectedDirectories.Visible = true;
 
             selectedDirectory = null;
+            rawDirectory = null;
             this.BackgroundImage = Properties.Resources.tom;
 
             label_FirstInit.Visible = true;
