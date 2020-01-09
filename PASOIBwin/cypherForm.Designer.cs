@@ -137,7 +137,8 @@
             this.button_UnlockChosenDirectory.Name = "button_UnlockChosenDirectory";
             this.button_UnlockChosenDirectory.Size = new System.Drawing.Size(379, 57);
             this.button_UnlockChosenDirectory.TabIndex = 10;
-            this.button_UnlockChosenDirectory.Text = "Временно получить доступ к выбранной директории (НЕ РАБОТАЕТ)";
+            this.button_UnlockChosenDirectory.Text = "Временно получить доступ к выбранной директории (РАБОТАЕТ кроме перехода интерфей" +
+    "са)";
             this.button_UnlockChosenDirectory.UseVisualStyleBackColor = true;
             this.button_UnlockChosenDirectory.Click += new System.EventHandler(this.Button_UnlockChosenDirectory_Click);
             // 
