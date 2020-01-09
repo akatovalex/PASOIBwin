@@ -278,6 +278,7 @@ namespace PASOIBwin
 
             selectedDirectory = null;
             rawDirectory = null;
+            directoryPath = null;
             this.BackgroundImage = Properties.Resources.tom;
 
             label_FirstInit.Visible = true;
