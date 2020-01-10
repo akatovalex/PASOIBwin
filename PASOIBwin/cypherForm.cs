@@ -28,6 +28,12 @@ namespace PASOIBwin {
         DataTable dtDirectories;
 
 
+        static string ValidateLastSlash(string path) {
+            if (path.LastIndexOf(@"\") != path.Length - 1)
+                return path + @"\";
+            return path;
+        }
+
         public CypherForm(bool isAdmin, byte[] encryptionKey) {
             InitializeComponent();
             //folderBrowserDialog1.SelectedPath = Directory.GetCurrentDirectory() + @"\testDirectory\";    // Если мешает, закомменть, мне удобней
@@ -43,7 +49,7 @@ namespace PASOIBwin {
 
             aesKey = encryptionKey;
             //if (!isAdmin)
-                //GoToUserUI();
+            //GoToUserUI();
         }
 
         void GoToAdminUI() {
@@ -124,47 +130,25 @@ namespace PASOIBwin {
 
         private void button_ChangeFolder_Click(object sender, EventArgs e) {
 
-            //folderBrowserDialog1.ShowDialog();
-            //directoryPath = folderBrowserDialog1.SelectedPath;
-            int selectedIndex = listBox_ProtectedDirectories.SelectedIndex;
-            if (selectedIndex != -1) {
-                directoryPath = listBox_ProtectedDirectories.Items[selectedIndex].ToString();
-                if (!string.IsNullOrEmpty(directoryPath)) {
-                    //Чтобы случайно не зашифровать себе локальный диск
-                    if (directoryPath.Length > 4) {
-                        SelectedDirectory = directoryPath;
-                        label_FirstInit.Visible = true;
-                        label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
-                        button_ProtectData.Visible = true;
-                    }
-                    else {
-                        directoryPath = null;
-                        SelectedDirectory = null;
-                        button_ProtectData.Visible = false;
+            folderBrowserDialog1.ShowDialog();
+            directoryPath = folderBrowserDialog1.SelectedPath;
+            if (!string.IsNullOrEmpty(directoryPath)) {
+                //Чтобы случайно не зашифровать себе локальный диск
+                if (directoryPath.Length > 4) {
+                    SelectedDirectory = directoryPath;
+                    label_FirstInit.Visible = true;
+                    label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
+                    button_ProtectData.Visible = true;
+                }
+                else {
+                    directoryPath = null;
+                    SelectedDirectory = null;
+                    button_ProtectData.Visible = false;
 
-                        label_FirstInit.Visible = true;
-                        label_FirstInit.Text = "Каталог не выбран";
-                    }
+                    label_FirstInit.Visible = true;
+                    label_FirstInit.Text = "Каталог не выбран";
                 }
             }
-
-            //if (!string.IsNullOrEmpty(directoryPath)) {
-            //    //Чтобы случайно не зашифровать себе локальный диск
-            //    if (directoryPath.Length > 4) {
-            //        SelectedDirectory = directoryPath;
-            //        label_FirstInit.Visible = true;
-            //        label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
-            //        button_ProtectData.Visible = true;
-            //    }
-            //    else {
-            //        directoryPath = null;
-            //        SelectedDirectory = null;
-            //        button_ProtectData.Visible = false;
-
-            //        label_FirstInit.Visible = true;
-            //        label_FirstInit.Text = "Каталог не выбран";
-            //    }
-            //}
         }
 
         private void button_ProtectData_Click(object sender, EventArgs e) {
@@ -185,7 +169,7 @@ namespace PASOIBwin {
             // Код сверху надо переделать или удалить, но временно оставим
 
             button_ProtectData.Visible = false;
-            dbDirectories.ExecuteCommand("INSERT INTO directories (path, encrypted, keyhash) VALUES ('"+SelectedDirectory+"', '" + 1 + "','"+keyHash+"')");
+            dbDirectories.ExecuteCommand("INSERT INTO directories (path, encrypted, keyhash) VALUES ('" + SelectedDirectory + "', '" + 1 + "','" + keyHash + "')");
 
             RefreshListBox();
 
@@ -264,7 +248,7 @@ namespace PASOIBwin {
             }
             EncryptFileBase(fileName, data, d => Encrypting.FromAes256(d, aesKey));
         }
-                
+
         private void Button_DecryptData_Click(object sender, EventArgs e) {
             isEncrypted = false;
 
@@ -285,7 +269,7 @@ namespace PASOIBwin {
             button_DecryptData.Visible = false;
             button_UnlockData.Visible = false;
 
-            dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + (SelectedDirectory.Remove(SelectedDirectory.Length-1)) + "'");
+            dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + (SelectedDirectory.Remove(SelectedDirectory.Length - 1)) + "'");
 
             RefreshListBox();
 
@@ -337,9 +321,8 @@ namespace PASOIBwin {
             dtDirectories = dbDirectories.ReadData("path", "directories", "[encrypted]='" + 1 + "' AND [keyhash]='" + keyHash + "'");
 
             foreach (DataRow row in dtDirectories.Rows) {
-                foreach (DataColumn column in dtDirectories.Columns) {
-                    listBox_ProtectedDirectories.Items.Add(row[column].ToString() + @"\");
-                }
+                foreach (DataColumn column in dtDirectories.Columns)
+                    listBox_ProtectedDirectories.Items.Add(ValidateLastSlash(row[column].ToString()));
             }
         }
     }
