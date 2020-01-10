@@ -83,7 +83,6 @@ namespace PASOIBwin {
             label_DataProtected.Text = "Можно юзать данные";
             button_ExitSession.Visible = true;
             button_DecryptData.Visible = true;
-            button_UnlockData.Visible = false;
         }
 
         private void Form1_Load(object sender, EventArgs e) {
@@ -212,18 +211,6 @@ namespace PASOIBwin {
             listBox_ProtectedDirectories.Visible = true;
         }
 
-        private void button_UnlockData_Click(object sender, EventArgs e) {
-            DecryptContent();
-            isEncrypted = false;
-            label_FirstInit.Visible = false;
-            label_DataProtected.Visible = true;
-            this.BackgroundImage = Properties.Resources.tomNewspaper;
-            label_DataProtected.Text = "Можно юзать данные";
-            button_ExitSession.Visible = true;
-            button_DecryptData.Visible = true;
-            button_UnlockData.Visible = false;
-        }
-
         string GetRawPath(string path) {
             return path.Remove(0, path.LastIndexOf(RawDirectory));
         }
@@ -283,7 +270,6 @@ namespace PASOIBwin {
             label_DataProtected.Visible = false;
             button_ExitSession.Visible = false;
             button_DecryptData.Visible = false;
-            button_UnlockData.Visible = false;
 
             dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + (SelectedDirectory.Remove(SelectedDirectory.Length-1)) + "'");
 
@@ -323,7 +309,6 @@ namespace PASOIBwin {
                 label_DataProtected.Text = "Можно юзать данные";
                 button_ExitSession.Visible = true;
                 button_DecryptData.Visible = true;
-                button_UnlockData.Visible = false;
 
 
                 listBox_ProtectedDirectories.Visible = false;

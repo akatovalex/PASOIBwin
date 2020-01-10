@@ -32,7 +32,6 @@
             this.label_FirstInit = new System.Windows.Forms.Label();
             this.button_ExitSession = new System.Windows.Forms.Button();
             this.label_DataProtected = new System.Windows.Forms.Label();
-            this.button_UnlockData = new System.Windows.Forms.Button();
             this.button_ChangeFolder = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.button_ProtectData = new System.Windows.Forms.Button();
@@ -70,17 +69,6 @@
             this.label_DataProtected.TabIndex = 4;
             this.label_DataProtected.Text = "Данные защищены";
             this.label_DataProtected.Visible = false;
-            // 
-            // button_UnlockData
-            // 
-            this.button_UnlockData.Location = new System.Drawing.Point(170, 361);
-            this.button_UnlockData.Name = "button_UnlockData";
-            this.button_UnlockData.Size = new System.Drawing.Size(329, 24);
-            this.button_UnlockData.TabIndex = 5;
-            this.button_UnlockData.Text = "Получить доступ (эта кнопка вообще ещё нужна?)";
-            this.button_UnlockData.UseVisualStyleBackColor = true;
-            this.button_UnlockData.Visible = false;
-            this.button_UnlockData.Click += new System.EventHandler(this.button_UnlockData_Click);
             // 
             // button_ChangeFolder
             // 
@@ -153,7 +141,6 @@
             this.Controls.Add(this.button_DecryptData);
             this.Controls.Add(this.button_ProtectData);
             this.Controls.Add(this.button_ChangeFolder);
-            this.Controls.Add(this.button_UnlockData);
             this.Controls.Add(this.label_DataProtected);
             this.Controls.Add(this.button_ExitSession);
             this.Controls.Add(this.label_FirstInit);
@@ -173,7 +160,6 @@
         private System.Windows.Forms.Label label_FirstInit;
         private System.Windows.Forms.Button button_ExitSession;
         private System.Windows.Forms.Label label_DataProtected;
-        private System.Windows.Forms.Button button_UnlockData;
         private System.Windows.Forms.Button button_ChangeFolder;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.Button button_ProtectData;
