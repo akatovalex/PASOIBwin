@@ -189,7 +189,7 @@ namespace PASOIBwin {
                         if (reason == CloseReason.TaskManagerClosing)
                             Directory.Delete(SelectedDirectory);
                         else {
-                            //EncryptContent();             //Пока что только мешает, т.к. дешифровать обратно невозможно
+                            EncryptContent();
                             if (Directory.Exists(RawDirectory))
                                 Directory.Delete(RawDirectory, true);
                         }
@@ -347,7 +347,7 @@ namespace PASOIBwin {
                     DecryptContent();
                     dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + login + "','Decrypted " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
                     isInitialized = true;
-                    isEncrypted = true;
+                    isEncrypted = false;
                     label_FirstInit.Visible = false;
                     label_DataProtected.Visible = true;
                     this.BackgroundImage = Properties.Resources.tomNewspaper;
