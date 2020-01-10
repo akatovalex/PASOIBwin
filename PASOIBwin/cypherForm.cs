@@ -15,7 +15,6 @@ namespace PASOIBwin {
     public partial class CypherForm : Form {
         string SelectedDirectory { get; set; }
         string RawDirectory { get { return SelectedDirectory?.Remove(0, SelectedDirectory.LastIndexOf(@"\") + 1); } }       //Мб не работает, мне выдало пустую строку
-        string directoryPath;
         bool isEncrypted = false;
         bool isInitialized = false;
         byte[] aesKey = new byte[] { 201, 193, 179, 215, 1, 255, 234, 83, 217, 75, 198, 92, 199,
@@ -36,23 +35,32 @@ namespace PASOIBwin {
                 return path + @"\";
             return path;
         }
+        bool IsEncrypted(DataTable table) {
+            if ((bool)table.Rows[0]["encrypted"]) {
+                MessageBox.Show("Данный путь уже зашифрован!");
+                return true;
+            }
+            return false;
+        }
         bool IsSelectedPathInDB(string path) {
             DataTable dt = dbDirectories.ReadData("encrypted", "directories", "[path]='" + path + "'");
             if (dt.Rows.Count == 0) {
                 dt = dbDirectories.ReadData("encrypted", "directories", "[path]='" + path + "@/" + "'");
                 if (dt.Rows.Count == 0)
                     return false;
-                if ((bool)dt.Rows[0]["encrypted"]) {
-                    MessageBox.Show("Данный путь уже зашифрован!");
-                    return true;
-                }
+                return IsEncrypted(dt);
             }
-            if ((bool)dt.Rows[0]["encrypted"]) {
-                MessageBox.Show("Данный путь уже зашифрован!");
-                return true;
-            }
-            return false;
+            return IsEncrypted(dt);
          }
+        void RefreshListBox() {
+            listBox_ProtectedDirectories.Items.Clear();
+            dtDirectories = dbDirectories.ReadData("path", "directories", "[encrypted]='" + 1 + "' AND [keyhash]='" + keyHash + "'");
+
+            foreach (DataRow row in dtDirectories.Rows) {
+                foreach (DataColumn column in dtDirectories.Columns)
+                    listBox_ProtectedDirectories.Items.Add(ValidateLastSlash(row[column].ToString()));
+            }
+        }
         void DeleteSelectedDirectoryFromDB() {
             dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + SelectedDirectory + "'");
             dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + SelectedDirectory + @"\" + "'");
@@ -197,7 +205,7 @@ namespace PASOIBwin {
         private void button_ChangeFolder_Click(object sender, EventArgs e) {
 
             folderBrowserDialog1.ShowDialog();
-            directoryPath = folderBrowserDialog1.SelectedPath;
+            string directoryPath = folderBrowserDialog1.SelectedPath;
             if (!string.IsNullOrEmpty(directoryPath) && !IsSelectedPathInDB(directoryPath)) {
                 //Чтобы случайно не зашифровать себе локальный диск
                 if (directoryPath.Length > 4) {
@@ -243,10 +251,6 @@ namespace PASOIBwin {
             RefreshListBox();
 
             SelectedDirectory = null;
-            directoryPath = null;
-
-
-
         }
 
         private void button_ExitSession_Click(object sender, EventArgs e) {
@@ -323,7 +327,6 @@ namespace PASOIBwin {
             RefreshListBox();
 
             SelectedDirectory = null;
-            directoryPath = null;
         }
 
         private void Button_UnlockChosenDirectory_Click(object sender, EventArgs e) {
@@ -336,20 +339,9 @@ namespace PASOIBwin {
             }
             else {
                 string path = listBox_ProtectedDirectories.SelectedItem.ToString();
-                SelectedDirectory = path.Remove(path.Length - 1);
-
-                if (Directory.Exists(SelectedDirectory)) {
-
-                    //MessageBox.Show("Выбран каталог для шифрования (в будущем для дешифрования - дальше врубается менюшка Тома с газетой):\n" + selectedDir);
-
-                    //label_FirstInit.Text = "Выбран каталог: " + selectedDirectory;
-                    //label_FirstInit.Visible = true;
-
-                    //rawDirectory = selectedDirectory.Remove(0, selectedDirectory.LastIndexOf(@"\") + 1);        // ну и костыли с удалением "\"
-
-
-                    //button_ProtectData.Visible = true;
-
+                path = path.Remove(path.Length - 1);
+                if (Directory.Exists(path)) {
+                    SelectedDirectory = path;
                     DecryptContent();
                     dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + login + "','Decrypted " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
                     isInitialized = true;
@@ -360,21 +352,8 @@ namespace PASOIBwin {
                     label_DataProtected.Text = "Можно юзать данные";
                     DrawUI("ChosenDirectoryUnlocked");
                 }
-                else {
+                else 
                     MessageBox.Show("Директории не существует " + SelectedDirectory, "Ошибка");
-                    SelectedDirectory = null;
-                    directoryPath = null;
-                }
-            }
-        }
-
-        private void RefreshListBox() {
-            listBox_ProtectedDirectories.Items.Clear();
-            dtDirectories = dbDirectories.ReadData("path", "directories", "[encrypted]='" + 1 + "' AND [keyhash]='" + keyHash + "'");
-
-            foreach (DataRow row in dtDirectories.Rows) {
-                foreach (DataColumn column in dtDirectories.Columns)
-                    listBox_ProtectedDirectories.Items.Add(ValidateLastSlash(row[column].ToString()));
             }
         }
     }
