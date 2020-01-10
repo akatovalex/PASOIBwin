@@ -35,6 +35,27 @@ namespace PASOIBwin {
                 return path + @"\";
             return path;
         }
+        bool IsSelectedPathInDB(string path) {
+            DataTable dt = dbDirectories.ReadData("encrypted", "directories", "[path]='" + path + "'");
+            if (dt.Rows.Count == 0) {
+                dt = dbDirectories.ReadData("encrypted", "directories", "[path]='" + path + "@/" + "'");
+                if (dt.Rows.Count == 0)
+                    return false;
+                if ((bool)dt.Rows[0]["encrypted"]) {
+                    MessageBox.Show("Данный путь уже зашифрован!");
+                    return true;
+                }
+            }
+            if ((bool)dt.Rows[0]["encrypted"]) {
+                MessageBox.Show("Данный путь уже зашифрован!");
+                return true;
+            }
+            return false;
+         }
+        void DeleteSelectedDirectoryFromDB() {
+            dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + SelectedDirectory + "'");
+            dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + SelectedDirectory + @"\" + "'");
+        }
 
         public CypherForm(bool isAdmin, byte[] encryptionKey, SecurityAPI.DataBase dbJ, string login) {
             InitializeComponent();
@@ -136,7 +157,7 @@ namespace PASOIBwin {
 
             folderBrowserDialog1.ShowDialog();
             directoryPath = folderBrowserDialog1.SelectedPath;
-            if (!string.IsNullOrEmpty(directoryPath)) {
+            if (!string.IsNullOrEmpty(directoryPath) && !IsSelectedPathInDB(directoryPath)) {
                 //Чтобы случайно не зашифровать себе локальный диск
                 if (directoryPath.Length > 4) {
                     SelectedDirectory = directoryPath;
@@ -174,6 +195,8 @@ namespace PASOIBwin {
             // Код сверху надо переделать или удалить, но временно оставим
 
             button_ProtectData.Visible = false;
+
+            DeleteSelectedDirectoryFromDB();
             dbDirectories.ExecuteCommand("INSERT INTO directories (path, encrypted, keyhash) VALUES ('" + SelectedDirectory + "', '" + 1 + "','" + keyHash + "')");
 
             RefreshListBox();
@@ -262,7 +285,7 @@ namespace PASOIBwin {
             button_ExitSession.Visible = false;
             button_DecryptData.Visible = false;
 
-            dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + (SelectedDirectory.Remove(SelectedDirectory.Length - 1)) + "'");
+            DeleteSelectedDirectoryFromDB();
             dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + login + "','Directory is decrypted and deleted from the DB: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
 
             RefreshListBox();
@@ -281,7 +304,8 @@ namespace PASOIBwin {
             }
             else {
                 //Временно
-                SelectedDirectory = listBox_ProtectedDirectories.SelectedItem.ToString();
+                string path = listBox_ProtectedDirectories.SelectedItem.ToString();
+                SelectedDirectory = path.Remove(path.Length - 1);
                 //MessageBox.Show("Выбран каталог для шифрования (в будущем для дешифрования - дальше врубается менюшка Тома с газетой):\n" + selectedDir);
 
                 //label_FirstInit.Text = "Выбран каталог: " + selectedDirectory;
