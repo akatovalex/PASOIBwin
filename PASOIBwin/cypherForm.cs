@@ -342,7 +342,7 @@ namespace PASOIBwin {
                     label_FirstInit.Visible = false;
                     label_DataProtected.Visible = true;
                     this.BackgroundImage = Properties.Resources.tomNewspaper;
-                    label_DataProtected.Text = "Можно юзать данные";
+                    label_DataProtected.Text = "Данные декодированы";
                     DrawUI("ChosenDirectoryUnlocked");
                 }
                 else 
