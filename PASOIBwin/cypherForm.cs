@@ -124,47 +124,47 @@ namespace PASOIBwin {
 
         private void button_ChangeFolder_Click(object sender, EventArgs e) {
 
-            folderBrowserDialog1.ShowDialog();
-            directoryPath = folderBrowserDialog1.SelectedPath;
-            //int selectedIndex = listBox_ProtectedDirectories.SelectedIndex;
-            //if (selectedIndex != -1) {
-            //    directoryPath = listBox_ProtectedDirectories.Items[selectedIndex].ToString();
-            //    if (!string.IsNullOrEmpty(directoryPath)) {
-            //        //Чтобы случайно не зашифровать себе локальный диск
-            //        if (directoryPath.Length > 4) {
-            //            SelectedDirectory = directoryPath;
-            //            label_FirstInit.Visible = true;
-            //            label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
-            //            button_ProtectData.Visible = true;
-            //        }
-            //        else {
-            //            directoryPath = null;
-            //            SelectedDirectory = null;
-            //            button_ProtectData.Visible = false;
+            //folderBrowserDialog1.ShowDialog();
+            //directoryPath = folderBrowserDialog1.SelectedPath;
+            int selectedIndex = listBox_ProtectedDirectories.SelectedIndex;
+            if (selectedIndex != -1) {
+                directoryPath = listBox_ProtectedDirectories.Items[selectedIndex].ToString();
+                if (!string.IsNullOrEmpty(directoryPath)) {
+                    //Чтобы случайно не зашифровать себе локальный диск
+                    if (directoryPath.Length > 4) {
+                        SelectedDirectory = directoryPath;
+                        label_FirstInit.Visible = true;
+                        label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
+                        button_ProtectData.Visible = true;
+                    }
+                    else {
+                        directoryPath = null;
+                        SelectedDirectory = null;
+                        button_ProtectData.Visible = false;
 
-            //            label_FirstInit.Visible = true;
-            //            label_FirstInit.Text = "Каталог не выбран";
-            //        }
-            //    }
-            //}
-
-            if (!string.IsNullOrEmpty(directoryPath)) {
-                //Чтобы случайно не зашифровать себе локальный диск
-                if (directoryPath.Length > 4) {
-                    SelectedDirectory = directoryPath;
-                    label_FirstInit.Visible = true;
-                    label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
-                    button_ProtectData.Visible = true;
-                }
-                else {
-                    directoryPath = null;
-                    SelectedDirectory = null;
-                    button_ProtectData.Visible = false;
-
-                    label_FirstInit.Visible = true;
-                    label_FirstInit.Text = "Каталог не выбран";
+                        label_FirstInit.Visible = true;
+                        label_FirstInit.Text = "Каталог не выбран";
+                    }
                 }
             }
+
+            //if (!string.IsNullOrEmpty(directoryPath)) {
+            //    //Чтобы случайно не зашифровать себе локальный диск
+            //    if (directoryPath.Length > 4) {
+            //        SelectedDirectory = directoryPath;
+            //        label_FirstInit.Visible = true;
+            //        label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
+            //        button_ProtectData.Visible = true;
+            //    }
+            //    else {
+            //        directoryPath = null;
+            //        SelectedDirectory = null;
+            //        button_ProtectData.Visible = false;
+
+            //        label_FirstInit.Visible = true;
+            //        label_FirstInit.Text = "Каталог не выбран";
+            //    }
+            //}
         }
 
         private void button_ProtectData_Click(object sender, EventArgs e) {

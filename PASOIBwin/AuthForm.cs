@@ -22,19 +22,28 @@ namespace PASOIBwin {
         Timer USBTimer;
         byte[] key = new byte[32];
 
-        bool UsbCheck(bool getKey) {
+        //0 - нет флешки
+        //1 - все в порядке
+        //минус 1 - флешка есть, но без ключа
+        int UsbCheck(bool getKey) {
             var info = DriveInfo.GetDrives();
             foreach (var device in info) {
-                if (device.DriveType == DriveType.Removable && device.IsReady) {//&& device.VolumeLabel == "USB_SEC_KEY") {
+                if (device.DriveType == DriveType.Removable && device.IsReady) {//&& device.VolumeLabel == "USB_SEC_KEY") { //DEBUG
                     if (getKey) {
-                        FileStream stream = File.OpenRead(device.Name + keyFileName);
-                        stream.Position = 34;
-                        stream.Read(key, 0, 32);
+                        string keyFilePath = device.Name + keyFileName;
+                        if (File.Exists(keyFilePath)) {
+                            FileStream stream = File.OpenRead(keyFilePath);
+                            stream.Position = 34;
+                            stream.Read(key, 0, 32);
+                            stream.Close();
+                        }
+                        else
+                            return -1;
                     }
-                    return true;
+                    return 1;
                 }
             }
-            return true; //Debug RETURN FALSE
+            return 0;
         }
 
         public AuthForm() {
@@ -55,7 +64,7 @@ namespace PASOIBwin {
         }
 
         private void USBTimer_Tick(object sender, EventArgs e) {
-            if (UsbCheck(false)) {
+            if (UsbCheck(false) == 1) {
                 labelUsbCheck.Text = "✓";
                 labelUsbCheck.ForeColor = Color.Green;
             }
@@ -89,18 +98,24 @@ namespace PASOIBwin {
                 }
             }
             if (authTrue) {
-                if (UsbCheck(true)) {
-                    datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + textBoxLogin.Text + "','Succesful authentication','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
-                    this.Hide();
-                    USBTimer.Stop();    //Если поставить это до this.Hide, то таймер вырубается и сразу врубается обратно из-за AuthForm_Shown
-                    CypherForm cypherForm = new CypherForm(userRole, key);
-                    cypherForm.ShowDialog();
-                    datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('0', '" + textBoxLogin.Text + "','Logoff','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
-                    this.Show();
-                }
-                else {
-                    MessageBox.Show("Вставь флешку!", "Ошибка!"); //TODO журнал
-                    datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('-2', '" + textBoxLogin.Text + "','No USB token found','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+                switch (UsbCheck(true)) {
+                    case 1:
+                        datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + textBoxLogin.Text + "','Succesful authentication','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+                        Hide();
+                        USBTimer.Stop();    //Если поставить это до this.Hide, то таймер вырубается и сразу врубается обратно из-за AuthForm_Shown
+                        CypherForm cypherForm = new CypherForm(userRole, key);
+                        cypherForm.ShowDialog();
+                        datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('0', '" + textBoxLogin.Text + "','Logoff','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+                        Show();
+                        break;
+                    case -1:
+                        MessageBox.Show("На носителе нет ключевой информации!", "Ошибка!");
+                        //в журнал записать //TODO
+                        break;
+                    default:
+                        MessageBox.Show("Вставь флешку!", "Ошибка!");
+                        datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('-2', '" + textBoxLogin.Text + "','No USB token found','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+                        break;
                 }
             }
             else {
