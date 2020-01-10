@@ -61,8 +61,8 @@ namespace PASOIBwin {
             }
         }
         void DeleteSelectedDirectoryFromDB() {
-            dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + SelectedDirectory + "'");
-            dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + SelectedDirectory + @"\" + "'");
+            dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + SelectedDirectory.Path + "'");
+            dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + SelectedDirectory.Path + @"\" + "'");
         }
 
         public CypherForm(bool isAdmin, byte[] usbHash, byte[] encryptionKey, SecurityAPI.DataBase dbJ, string login) {
@@ -209,17 +209,17 @@ namespace PASOIBwin {
 
             folderBrowserDialog1.ShowDialog();
             string directoryPath = folderBrowserDialog1.SelectedPath;
-            if (!string.IsNullOrEmpty(directoryPath) && !IsSelectedPathInDB(directoryPath)) {
+            if (directoryPath != "//" && !IsSelectedPathInDB(directoryPath)) {
                 //Чтобы случайно не зашифровать себе локальный диск
                 if (directoryPath.Length > 4) {
                     SelectedDirectory.Path = directoryPath;
                     label_FirstInit.Visible = true;
-                    label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
+                    label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory.Path;
                     DrawUI("NewDirectoryChosen");
                 }
                 else {
                     directoryPath = null;
-                    SelectedDirectory = null;
+                    SelectedDirectory.Path = null;
                     DrawUI("NewDirectoryEncrypted");
 
                     label_FirstInit.Visible = true;
@@ -229,36 +229,38 @@ namespace PASOIBwin {
         }
 
         private void button_ProtectData_Click(object sender, EventArgs e) {
-            EncryptContentInitial();
-            dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('4', '" + login + "','New encrypted directory: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
-            //button_ChangeFolder.Visible = false;
-            //button_ProtectData.Visible = false;
-            //button_UnlockChosenDirectory.Visible = false;
-            //listBox_ProtectedDirectories.Visible = false;
+            if (SelectedDirectory.Path != null) {
+                EncryptContentInitial();
+                dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('4', '" + login + "','New encrypted directory: " + SelectedDirectory.Path + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+                //button_ChangeFolder.Visible = false;
+                //button_ProtectData.Visible = false;
+                //button_UnlockChosenDirectory.Visible = false;
+                //listBox_ProtectedDirectories.Visible = false;
 
-            //this.BackgroundImage = Properties.Resources.jerry;
-            //label_FirstInit.Text = "Система сконфигурирвана. Данные защищены";
-            //button_UnlockData.Visible = true;
-            //isInitialized = true;
-            //isEncrypted = true;
+                //this.BackgroundImage = Properties.Resources.jerry;
+                //label_FirstInit.Text = "Система сконфигурирвана. Данные защищены";
+                //button_UnlockData.Visible = true;
+                //isInitialized = true;
+                //isEncrypted = true;
 
-            // СДЕЛАЙ ТАК, ЧТОБЫ ПРИ НАЖАТИИ ЭТОЙ КНОПКИ ListBox пополнялся новым элементом, а новый каталог шифровался (И ВСЁ, ОСТАЁМСЯ НА ЭТОМ ЭКРАНЕ)    
-            // (можно сделать тупо по нажатию плюса, но не стоит, так всё себе перешифруешь случайно)
-            // Код сверху надо переделать или удалить, но временно оставим
+                // СДЕЛАЙ ТАК, ЧТОБЫ ПРИ НАЖАТИИ ЭТОЙ КНОПКИ ListBox пополнялся новым элементом, а новый каталог шифровался (И ВСЁ, ОСТАЁМСЯ НА ЭТОМ ЭКРАНЕ)    
+                // (можно сделать тупо по нажатию плюса, но не стоит, так всё себе перешифруешь случайно)
+                // Код сверху надо переделать или удалить, но временно оставим
 
-            DrawUI("NewDirectoryEncrypted");
+                DrawUI("NewDirectoryEncrypted");
 
-            DeleteSelectedDirectoryFromDB();
-            dbDirectories.ExecuteCommand("INSERT INTO directories (path, encrypted, keyhash) VALUES ('" + SelectedDirectory + "', '" + 1 + "','" + keyHash + "')");
+                DeleteSelectedDirectoryFromDB();
+                dbDirectories.ExecuteCommand("INSERT INTO directories (path, encrypted, keyhash) VALUES ('" + SelectedDirectory.Path + "', '" + 1 + "','" + keyHash + "')");
 
-            RefreshListBox();
+                RefreshListBox();
 
-            SelectedDirectory = null;
+                SelectedDirectory.Path = null;
+            }
         }
 
         private void button_ExitSession_Click(object sender, EventArgs e) {
             EncryptContent();
-            dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('2', '" + login + "','Encrypted: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+            dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('2', '" + login + "','Encrypted: " + SelectedDirectory.Path + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
             label_DataProtected.Text = "Данные защищены";
             this.BackgroundImage = Properties.Resources.tom;
 
@@ -322,11 +324,11 @@ namespace PASOIBwin {
             label_FirstInit.Text = "Каталог не выбран";
 
             DeleteSelectedDirectoryFromDB();
-            dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('5', '" + login + "','Directory is decrypted and deleted from the DB: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+            dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('5', '" + login + "','Directory is decrypted and deleted from the DB: " + SelectedDirectory.Path + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
 
             RefreshListBox();
 
-            SelectedDirectory = null;
+            SelectedDirectory.Path = null;
         }
 
         private void Button_UnlockChosenDirectory_Click(object sender, EventArgs e) {
@@ -343,7 +345,7 @@ namespace PASOIBwin {
                 if (Directory.Exists(path)) {
                     SelectedDirectory.Path = path;
                     DecryptContent();
-                    dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('3', '" + login + "','Decrypted " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+                    dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('3', '" + login + "','Decrypted " + SelectedDirectory.Path + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
                     isInitialized = true;
                     SelectedDirectory.IsEncrypted = false;
                     label_FirstInit.Visible = false;
@@ -353,7 +355,7 @@ namespace PASOIBwin {
                     DrawUI("ChosenDirectoryUnlocked");
                 }
                 else 
-                    MessageBox.Show("Директории не существует " + SelectedDirectory, "Ошибка");
+                    MessageBox.Show("Директории не существует " + SelectedDirectory.Path, "Ошибка");
             }
         }
     }
