@@ -118,6 +118,7 @@ namespace PASOIBwin {
 
                     button_ExitSession.Visible = false;
                     label_DataProtected.Visible = false;
+                    this.BackgroundImage = Properties.Resources.abstract_blue_geometric_shapes_background_1035_17545;
 
                     button_ChangeFolder.Visible = true;
                     button_DecryptData.Visible = false;
@@ -133,6 +134,7 @@ namespace PASOIBwin {
                     button_UnlockChosenDirectory.Visible = false;
 
                     button_ExitSession.Visible = true;
+                    this.BackgroundImage = Properties.Resources.padlock_open_3v2;
 
                     button_ChangeFolder.Visible = false;
                     button_ProtectData.Visible = false;
@@ -155,6 +157,7 @@ namespace PASOIBwin {
                 case "MainMenu":
                     listBox_ProtectedDirectories.Visible = true;
                     button_UnlockChosenDirectory.Visible = true;
+                    this.BackgroundImage = Properties.Resources.abstract_blue_geometric_shapes_background_1035_17545;
 
                     button_ExitSession.Visible = false;
                     label_DataProtected.Visible = false;
@@ -164,6 +167,7 @@ namespace PASOIBwin {
                     button_UnlockChosenDirectory.Visible = false;
 
                     button_ExitSession.Visible = true;
+                    this.BackgroundImage = Properties.Resources.tomNewspaper;
                     break;
                 default:
                     break;
@@ -253,7 +257,6 @@ namespace PASOIBwin {
             EncryptContent();
             dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('2', '" + login + "','Encrypted: " + SelectedDirectory.Path + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
             label_DataProtected.Text = "Данные защищены";
-            this.BackgroundImage = Properties.Resources.tom;
 
             SelectedDirectory.IsEncrypted = true;
 
@@ -308,7 +311,6 @@ namespace PASOIBwin {
 
             //SelectedDirectory = null;
             //directoryPath = null;
-            this.BackgroundImage = Properties.Resources.tom;
             DrawUI("MainMenu");
 
             label_FirstInit.Visible = true;
@@ -341,7 +343,6 @@ namespace PASOIBwin {
                     SelectedDirectory.IsEncrypted = false;
                     label_FirstInit.Visible = false;
                     label_DataProtected.Visible = true;
-                    this.BackgroundImage = Properties.Resources.tomNewspaper;
                     label_DataProtected.Text = "Данные декодированы";
                     DrawUI("ChosenDirectoryUnlocked");
                 }
