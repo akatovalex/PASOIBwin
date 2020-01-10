@@ -116,6 +116,7 @@ namespace PASOIBwin {
                     button_UnlockChosenDirectory.Visible = true;
 
                     button_ExitSession.Visible = false;
+                    label_DataProtected.Visible = false;
 
                     button_ChangeFolder.Visible = true;
                     button_DecryptData.Visible = false;
@@ -155,6 +156,7 @@ namespace PASOIBwin {
                     button_UnlockChosenDirectory.Visible = true;
 
                     button_ExitSession.Visible = false;
+                    label_DataProtected.Visible = false;
                     break;
                 case "ChosenDirectoryUnlocked":
                     listBox_ProtectedDirectories.Visible = false;
