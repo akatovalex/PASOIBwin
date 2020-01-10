@@ -34,23 +34,32 @@ namespace PASOIBwin {
                 return path + @"\";
             return path;
         }
+        bool IsEncrypted(DataTable table) {
+            if ((bool)table.Rows[0]["encrypted"]) {
+                MessageBox.Show("Данный путь уже зашифрован!");
+                return true;
+            }
+            return false;
+        }
         bool IsSelectedPathInDB(string path) {
             DataTable dt = dbDirectories.ReadData("encrypted", "directories", "[path]='" + path + "'");
             if (dt.Rows.Count == 0) {
                 dt = dbDirectories.ReadData("encrypted", "directories", "[path]='" + path + "@/" + "'");
                 if (dt.Rows.Count == 0)
                     return false;
-                if ((bool)dt.Rows[0]["encrypted"]) {
-                    MessageBox.Show("Данный путь уже зашифрован!");
-                    return true;
-                }
+                return IsEncrypted(dt);
             }
-            if ((bool)dt.Rows[0]["encrypted"]) {
-                MessageBox.Show("Данный путь уже зашифрован!");
-                return true;
-            }
-            return false;
+            return IsEncrypted(dt);
          }
+        void RefreshListBox() {
+            listBox_ProtectedDirectories.Items.Clear();
+            dtDirectories = dbDirectories.ReadData("path", "directories", "[encrypted]='" + 1 + "' AND [keyhash]='" + keyHash + "'");
+
+            foreach (DataRow row in dtDirectories.Rows) {
+                foreach (DataColumn column in dtDirectories.Columns)
+                    listBox_ProtectedDirectories.Items.Add(ValidateLastSlash(row[column].ToString()));
+            }
+        }
         void DeleteSelectedDirectoryFromDB() {
             dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + SelectedDirectory + "'");
             dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + SelectedDirectory + @"\" + "'");
@@ -285,16 +294,6 @@ namespace PASOIBwin {
                 }
                 else 
                     MessageBox.Show("Директории не существует " + SelectedDirectory, "Ошибка");
-            }
-        }
-
-        private void RefreshListBox() {
-            listBox_ProtectedDirectories.Items.Clear();
-            dtDirectories = dbDirectories.ReadData("path", "directories", "[encrypted]='" + 1 + "' AND [keyhash]='" + keyHash + "'");
-
-            foreach (DataRow row in dtDirectories.Rows) {
-                foreach (DataColumn column in dtDirectories.Columns)
-                    listBox_ProtectedDirectories.Items.Add(ValidateLastSlash(row[column].ToString()));
             }
         }
     }
