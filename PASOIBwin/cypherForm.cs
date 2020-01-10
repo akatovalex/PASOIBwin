@@ -29,6 +29,7 @@ namespace PASOIBwin {
 
         SecurityAPI.DataBase dbJournal;
         string login;
+        bool isAdmin;
 
         static string ValidateLastSlash(string path) {
             if (path.LastIndexOf(@"\") != path.Length - 1)
@@ -76,50 +77,90 @@ namespace PASOIBwin {
 
             dbJournal = dbJ;
             this.login = login;
+            this.isAdmin = isAdmin;
+
+            //if (!isAdmin) {
+            //    button_ChangeFolder.Enabled = false;
+            //    button_ProtectData.Enabled = false;
+            //    button_DecryptData.Enabled = false;
+            //}
+
+
         }
 
-        void GoToAdminUI() {
-
+        void DrawUI(string uiChange = "do nothing") {
+            if (isAdmin) {
+                GoToAdminUI(uiChange);
+            }
+            else {
+                GoToUserUI(uiChange);
+            }
         }
-        void GoToUserUI() {
-            //from button_ChangeFolder_Click
-            directoryPath = listBox_ProtectedDirectories.Items[0].ToString();
-            if (!string.IsNullOrEmpty(directoryPath)) {
-                //Чтобы случайно не зашифровать себе локальный диск
-                if (directoryPath.Length > 4) {
-                    SelectedDirectory = directoryPath;
-                    label_FirstInit.Visible = true;
-                    label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
-                    button_ProtectData.Visible = true;
-                }
-                else {
-                    directoryPath = null;
-                    SelectedDirectory = null;
-                    button_ProtectData.Visible = false;
 
+        void GoToAdminUI(string uiChange) {
+            switch (uiChange) {
+                case "FirstInit":
                     label_FirstInit.Visible = true;
                     label_FirstInit.Text = "Каталог не выбран";
-                }
+                    break;
+                case "MainMenu":
+                    listBox_ProtectedDirectories.Visible = true;
+                    button_UnlockChosenDirectory.Visible = true;
+
+                    button_ExitSession.Visible = false;
+
+                    button_ChangeFolder.Visible = true;
+                    button_DecryptData.Visible = false;
+                    break;
+                case "NewDirectoryChosen":
+                    button_ProtectData.Visible = true;
+                    break;
+                case "NewDirectoryEncrypted":
+                    button_ProtectData.Visible = false;
+                    break;
+                case "ChosenDirectoryUnlocked":
+                    listBox_ProtectedDirectories.Visible = false;
+                    button_UnlockChosenDirectory.Visible = false;
+
+                    button_ExitSession.Visible = true;
+
+                    button_ChangeFolder.Visible = false;
+                    button_ProtectData.Visible = false;
+                    button_DecryptData.Visible = true;
+                    break;
+                default:
+                    break;
             }
-            //from button_ProtectData_Click
-            button_ChangeFolder.Visible = false;
-            button_ProtectData.Visible = false;
-            button_UnlockChosenDirectory.Visible = false;
-            listBox_ProtectedDirectories.Visible = false;
-            //from button_UnlockData_Click
-            DecryptContent();
-            isEncrypted = false;
-            label_FirstInit.Visible = false;
-            label_DataProtected.Visible = true;
-            this.BackgroundImage = Properties.Resources.tomNewspaper;
-            label_DataProtected.Text = "Можно юзать данные";
-            button_ExitSession.Visible = true;
-            button_DecryptData.Visible = true;
+        }
+        void GoToUserUI(string uiChange) {
+            switch (uiChange) {
+                case "FirstInit":
+                    label_FirstInit.Visible = true;
+                    label_FirstInit.Text = "Каталог не выбран";
+
+                    button_ChangeFolder.Visible = false;
+                    button_DecryptData.Visible = false;
+                    button_ProtectData.Visible = false;
+                    break;
+                case "MainMenu":
+                    listBox_ProtectedDirectories.Visible = true;
+                    button_UnlockChosenDirectory.Visible = true;
+
+                    button_ExitSession.Visible = false;
+                    break;
+                case "ChosenDirectoryUnlocked":
+                    listBox_ProtectedDirectories.Visible = false;
+                    button_UnlockChosenDirectory.Visible = false;
+
+                    button_ExitSession.Visible = true;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e) {
-            label_FirstInit.Visible = true;
-            label_FirstInit.Text = "Каталог не выбран";
+            DrawUI("FirstInit");
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e) {
@@ -163,12 +204,12 @@ namespace PASOIBwin {
                     SelectedDirectory = directoryPath;
                     label_FirstInit.Visible = true;
                     label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
-                    button_ProtectData.Visible = true;
+                    DrawUI("NewDirectoryChosen");
                 }
                 else {
                     directoryPath = null;
                     SelectedDirectory = null;
-                    button_ProtectData.Visible = false;
+                    DrawUI("NewDirectoryEncrypted");
 
                     label_FirstInit.Visible = true;
                     label_FirstInit.Text = "Каталог не выбран";
@@ -194,7 +235,7 @@ namespace PASOIBwin {
             // (можно сделать тупо по нажатию плюса, но не стоит, так всё себе перешифруешь случайно)
             // Код сверху надо переделать или удалить, но временно оставим
 
-            button_ProtectData.Visible = false;
+            DrawUI("NewDirectoryEncrypted");
 
             DeleteSelectedDirectoryFromDB();
             dbDirectories.ExecuteCommand("INSERT INTO directories (path, encrypted, keyhash) VALUES ('" + SelectedDirectory + "', '" + 1 + "','" + keyHash + "')");
@@ -214,15 +255,12 @@ namespace PASOIBwin {
             label_DataProtected.Text = "Данные защищены";
             this.BackgroundImage = Properties.Resources.tom;
             //button_UnlockData.Visible = true;
-            button_ExitSession.Visible = false;
-            button_DecryptData.Visible = false;
+
             //isEncrypted = true;
 
             isEncrypted = false; //DEBUG (больше не нужна)
 
-            button_ChangeFolder.Visible = true;
-            button_UnlockChosenDirectory.Visible = true;
-            listBox_ProtectedDirectories.Visible = true;
+            DrawUI("MainMenu");
         }
 
         string GetRawPath(string path) {
@@ -269,21 +307,15 @@ namespace PASOIBwin {
         private void Button_DecryptData_Click(object sender, EventArgs e) {
             isEncrypted = false;
 
-            button_ChangeFolder.Visible = true;
-            button_UnlockChosenDirectory.Visible = true;
-            listBox_ProtectedDirectories.Visible = true;
+
 
             //SelectedDirectory = null;
             //directoryPath = null;
             this.BackgroundImage = Properties.Resources.tom;
+            DrawUI("MainMenu");
 
             label_FirstInit.Visible = true;
             label_FirstInit.Text = "Каталог не выбран";
-
-
-            label_DataProtected.Visible = false;
-            button_ExitSession.Visible = false;
-            button_DecryptData.Visible = false;
 
             DeleteSelectedDirectoryFromDB();
             dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + login + "','Directory is decrypted and deleted from the DB: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
@@ -326,14 +358,7 @@ namespace PASOIBwin {
                     label_DataProtected.Visible = true;
                     this.BackgroundImage = Properties.Resources.tomNewspaper;
                     label_DataProtected.Text = "Можно юзать данные";
-                    button_ExitSession.Visible = true;
-                    button_DecryptData.Visible = true;
-
-
-                    listBox_ProtectedDirectories.Visible = false;
-                    button_ChangeFolder.Visible = false;
-                    button_UnlockChosenDirectory.Visible = false;
-                    button_ProtectData.Visible = false;
+                    DrawUI("ChosenDirectoryUnlocked");
                 }
                 else {
                     MessageBox.Show("Директории не существует " + SelectedDirectory, "Ошибка");
