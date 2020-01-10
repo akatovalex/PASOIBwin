@@ -14,12 +14,14 @@ using System.Windows.Forms;
 namespace PASOIBwin {
     public partial class CypherForm : Form {
         string SelectedDirectory { get; set; }
-        string RawDirectory { get { return SelectedDirectory?.Remove(0, SelectedDirectory.LastIndexOf(@"\") + 1); } }
+        string RawDirectory { get { return SelectedDirectory?.Remove(0, SelectedDirectory.LastIndexOf(@"\") + 1); } }       //Мб не работает, мне выдало пустую строку
         string directoryPath;
         bool isEncrypted = false;
         bool isInitialized = false;
         byte[] aesKey = new byte[] { 201, 193, 179, 215, 1, 255, 234, 83, 217, 75, 198, 92, 199,
             88, 42, 244, 20, 166, 0, 39, 224, 106, 140, 225, 104, 245, 247, 17, 150, 187, 203, 252 };
+
+        string keyHash;
 
         public string sqlPathDirectories;
         SecurityAPI.DataBase dbDirectories;
@@ -35,14 +37,9 @@ namespace PASOIBwin {
             sqlPathDirectories = "‪protectedfiles.sqlite";
             dbDirectories = new SecurityAPI.DataBase(sqlPathDirectories);
 
-            string keyHash = "df6670833b208a10561f74be3f79a279";    //Данный хэш надо считывать с флешки, рядом с ключом для дешифрования каталогов
-            dtDirectories = dbDirectories.ReadData("path", "directories", "[encrypted]='" + 1 + "' AND [keyhash]='" + keyHash + "'");
+            keyHash = "df6670833b208a10561f74be3f79a279";    //Данный хэш надо считывать с флешки, рядом с ключом для дешифрования каталогов
 
-            foreach (DataRow row in dtDirectories.Rows) {
-                foreach (DataColumn column in dtDirectories.Columns) {
-                    listBox_ProtectedDirectories.Items.Add(row[column].ToString() + @"\");
-                }
-            }
+            RefreshListBox();
 
             aesKey = encryptionKey;
             //if (!isAdmin)
@@ -127,57 +124,92 @@ namespace PASOIBwin {
 
         private void button_ChangeFolder_Click(object sender, EventArgs e) {
 
-            //folderBrowserDialog1.ShowDialog();
-            //directoryPath = folderBrowserDialog1.SelectedPath; //DEBUG
-            int selectedIndex = listBox_ProtectedDirectories.SelectedIndex;
-            if (selectedIndex != -1) {
-                directoryPath = listBox_ProtectedDirectories.Items[selectedIndex].ToString();
-                if (!string.IsNullOrEmpty(directoryPath)) {
-                    //Чтобы случайно не зашифровать себе локальный диск
-                    if (directoryPath.Length > 4) {
-                        SelectedDirectory = directoryPath;
-                        label_FirstInit.Visible = true;
-                        label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
-                        button_ProtectData.Visible = true;
-                    }
-                    else {
-                        directoryPath = null;
-                        SelectedDirectory = null;
-                        button_ProtectData.Visible = false;
+            folderBrowserDialog1.ShowDialog();
+            directoryPath = folderBrowserDialog1.SelectedPath;
+            //int selectedIndex = listBox_ProtectedDirectories.SelectedIndex;
+            //if (selectedIndex != -1) {
+            //    directoryPath = listBox_ProtectedDirectories.Items[selectedIndex].ToString();
+            //    if (!string.IsNullOrEmpty(directoryPath)) {
+            //        //Чтобы случайно не зашифровать себе локальный диск
+            //        if (directoryPath.Length > 4) {
+            //            SelectedDirectory = directoryPath;
+            //            label_FirstInit.Visible = true;
+            //            label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
+            //            button_ProtectData.Visible = true;
+            //        }
+            //        else {
+            //            directoryPath = null;
+            //            SelectedDirectory = null;
+            //            button_ProtectData.Visible = false;
 
-                        label_FirstInit.Visible = true;
-                        label_FirstInit.Text = "Каталог не выбран";
-                    }
+            //            label_FirstInit.Visible = true;
+            //            label_FirstInit.Text = "Каталог не выбран";
+            //        }
+            //    }
+            //}
+
+            if (!string.IsNullOrEmpty(directoryPath)) {
+                //Чтобы случайно не зашифровать себе локальный диск
+                if (directoryPath.Length > 4) {
+                    SelectedDirectory = directoryPath;
+                    label_FirstInit.Visible = true;
+                    label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
+                    button_ProtectData.Visible = true;
+                }
+                else {
+                    directoryPath = null;
+                    SelectedDirectory = null;
+                    button_ProtectData.Visible = false;
+
+                    label_FirstInit.Visible = true;
+                    label_FirstInit.Text = "Каталог не выбран";
                 }
             }
         }
 
         private void button_ProtectData_Click(object sender, EventArgs e) {
             EncryptContentInitial();
-            button_ChangeFolder.Visible = false;
-            button_ProtectData.Visible = false;
-            button_UnlockChosenDirectory.Visible = false;
-            listBox_ProtectedDirectories.Visible = false;
+            //button_ChangeFolder.Visible = false;
+            //button_ProtectData.Visible = false;
+            //button_UnlockChosenDirectory.Visible = false;
+            //listBox_ProtectedDirectories.Visible = false;
 
-            this.BackgroundImage = Properties.Resources.jerry;
-            label_FirstInit.Text = "Система сконфигурирвана. Данные защищены";
-            button_UnlockData.Visible = true;
-            isInitialized = true;
-            isEncrypted = true;
+            //this.BackgroundImage = Properties.Resources.jerry;
+            //label_FirstInit.Text = "Система сконфигурирвана. Данные защищены";
+            //button_UnlockData.Visible = true;
+            //isInitialized = true;
+            //isEncrypted = true;
 
             // СДЕЛАЙ ТАК, ЧТОБЫ ПРИ НАЖАТИИ ЭТОЙ КНОПКИ ListBox пополнялся новым элементом, а новый каталог шифровался (И ВСЁ, ОСТАЁМСЯ НА ЭТОМ ЭКРАНЕ)    
             // (можно сделать тупо по нажатию плюса, но не стоит, так всё себе перешифруешь случайно)
             // Код сверху надо переделать или удалить, но временно оставим
+
+            button_ProtectData.Visible = false;
+            dbDirectories.ExecuteCommand("INSERT INTO directories (path, encrypted, keyhash) VALUES ('"+SelectedDirectory+"', '" + 1 + "','"+keyHash+"')");
+
+            RefreshListBox();
+
+            SelectedDirectory = null;
+            directoryPath = null;
+
+
+
         }
 
         private void button_ExitSession_Click(object sender, EventArgs e) {
             EncryptContent();
             label_DataProtected.Text = "Данные защищены";
-            this.BackgroundImage = Properties.Resources.jerry;
-            button_UnlockData.Visible = true;
+            this.BackgroundImage = Properties.Resources.tom;
+            //button_UnlockData.Visible = true;
             button_ExitSession.Visible = false;
             button_DecryptData.Visible = false;
-            isEncrypted = true;
+            //isEncrypted = true;
+
+            isEncrypted = false; //DEBUG (больше не нужна)
+
+            button_ChangeFolder.Visible = true;
+            button_UnlockChosenDirectory.Visible = true;
+            listBox_ProtectedDirectories.Visible = true;
         }
 
         private void button_UnlockData_Click(object sender, EventArgs e) {
@@ -240,8 +272,8 @@ namespace PASOIBwin {
             button_UnlockChosenDirectory.Visible = true;
             listBox_ProtectedDirectories.Visible = true;
 
-            SelectedDirectory = null;
-            directoryPath = null;
+            //SelectedDirectory = null;
+            //directoryPath = null;
             this.BackgroundImage = Properties.Resources.tom;
 
             label_FirstInit.Visible = true;
@@ -252,6 +284,13 @@ namespace PASOIBwin {
             button_ExitSession.Visible = false;
             button_DecryptData.Visible = false;
             button_UnlockData.Visible = false;
+
+            dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + (SelectedDirectory.Remove(SelectedDirectory.Length-1)) + "'");
+
+            RefreshListBox();
+
+            SelectedDirectory = null;
+            directoryPath = null;
         }
 
         private void Button_UnlockChosenDirectory_Click(object sender, EventArgs e) {
@@ -290,6 +329,17 @@ namespace PASOIBwin {
                 listBox_ProtectedDirectories.Visible = false;
                 button_ChangeFolder.Visible = false;
                 button_UnlockChosenDirectory.Visible = false;
+            }
+        }
+
+        private void RefreshListBox() {
+            listBox_ProtectedDirectories.Items.Clear();
+            dtDirectories = dbDirectories.ReadData("path", "directories", "[encrypted]='" + 1 + "' AND [keyhash]='" + keyHash + "'");
+
+            foreach (DataRow row in dtDirectories.Rows) {
+                foreach (DataColumn column in dtDirectories.Columns) {
+                    listBox_ProtectedDirectories.Items.Add(row[column].ToString() + @"\");
+                }
             }
         }
     }

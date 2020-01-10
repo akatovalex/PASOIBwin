@@ -56,7 +56,7 @@
             this.button_ExitSession.Name = "button_ExitSession";
             this.button_ExitSession.Size = new System.Drawing.Size(197, 45);
             this.button_ExitSession.TabIndex = 3;
-            this.button_ExitSession.Text = "Выйти из сессии";
+            this.button_ExitSession.Text = "Выйти из сессии и вернуться в главное меню";
             this.button_ExitSession.UseVisualStyleBackColor = true;
             this.button_ExitSession.Visible = false;
             this.button_ExitSession.Click += new System.EventHandler(this.button_ExitSession_Click);
@@ -73,11 +73,11 @@
             // 
             // button_UnlockData
             // 
-            this.button_UnlockData.Location = new System.Drawing.Point(294, 361);
+            this.button_UnlockData.Location = new System.Drawing.Point(170, 361);
             this.button_UnlockData.Name = "button_UnlockData";
-            this.button_UnlockData.Size = new System.Drawing.Size(144, 24);
+            this.button_UnlockData.Size = new System.Drawing.Size(329, 24);
             this.button_UnlockData.TabIndex = 5;
-            this.button_UnlockData.Text = "Получить доступ";
+            this.button_UnlockData.Text = "Получить доступ (эта кнопка вообще ещё нужна?)";
             this.button_UnlockData.UseVisualStyleBackColor = true;
             this.button_UnlockData.Visible = false;
             this.button_UnlockData.Click += new System.EventHandler(this.button_UnlockData_Click);
@@ -103,7 +103,7 @@
             this.button_ProtectData.Name = "button_ProtectData";
             this.button_ProtectData.Size = new System.Drawing.Size(168, 51);
             this.button_ProtectData.TabIndex = 7;
-            this.button_ProtectData.Text = "Защитить новые данные (Надо кардинально переделать)";
+            this.button_ProtectData.Text = "Защитить новые данные (Надо рассмотреть случай, когда каталог уже есть в БД)";
             this.button_ProtectData.UseVisualStyleBackColor = true;
             this.button_ProtectData.Visible = false;
             this.button_ProtectData.Click += new System.EventHandler(this.button_ProtectData_Click);
@@ -114,7 +114,7 @@
             this.button_DecryptData.Name = "button_DecryptData";
             this.button_DecryptData.Size = new System.Drawing.Size(213, 56);
             this.button_DecryptData.TabIndex = 8;
-            this.button_DecryptData.Text = "Разблокировать защищаемую папку и выбрать другую";
+            this.button_DecryptData.Text = "Удалить каталог из защищаемых и вернуться в главное меню";
             this.button_DecryptData.UseVisualStyleBackColor = true;
             this.button_DecryptData.Visible = false;
             this.button_DecryptData.Click += new System.EventHandler(this.Button_DecryptData_Click);
@@ -137,8 +137,7 @@
             this.button_UnlockChosenDirectory.Name = "button_UnlockChosenDirectory";
             this.button_UnlockChosenDirectory.Size = new System.Drawing.Size(379, 57);
             this.button_UnlockChosenDirectory.TabIndex = 10;
-            this.button_UnlockChosenDirectory.Text = "Временно получить доступ к выбранной директории (РАБОТАЕТ кроме перехода интерфей" +
-    "са)";
+            this.button_UnlockChosenDirectory.Text = "Получить доступ к выбранной директории";
             this.button_UnlockChosenDirectory.UseVisualStyleBackColor = true;
             this.button_UnlockChosenDirectory.Click += new System.EventHandler(this.Button_UnlockChosenDirectory_Click);
             // 
