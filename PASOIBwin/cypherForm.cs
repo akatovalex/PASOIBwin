@@ -285,6 +285,11 @@ namespace PASOIBwin {
                 button_ExitSession.Visible = true;
                 button_DecryptData.Visible = true;
                 button_UnlockData.Visible = false;
+
+
+                listBox_ProtectedDirectories.Visible = false;
+                button_ChangeFolder.Visible = false;
+                button_UnlockChosenDirectory.Visible = false;
             }
         }
     }
