@@ -303,35 +303,43 @@ namespace PASOIBwin {
                 MessageBox.Show("Choose something already");
             }
             else {
-                //Временно
                 string path = listBox_ProtectedDirectories.SelectedItem.ToString();
                 SelectedDirectory = path.Remove(path.Length - 1);
-                //MessageBox.Show("Выбран каталог для шифрования (в будущем для дешифрования - дальше врубается менюшка Тома с газетой):\n" + selectedDir);
 
-                //label_FirstInit.Text = "Выбран каталог: " + selectedDirectory;
-                //label_FirstInit.Visible = true;
+                if (Directory.Exists(SelectedDirectory)) {
 
-                //rawDirectory = selectedDirectory.Remove(0, selectedDirectory.LastIndexOf(@"\") + 1);        // ну и костыли с удалением "\"
+                    //MessageBox.Show("Выбран каталог для шифрования (в будущем для дешифрования - дальше врубается менюшка Тома с газетой):\n" + selectedDir);
 
+                    //label_FirstInit.Text = "Выбран каталог: " + selectedDirectory;
+                    //label_FirstInit.Visible = true;
 
-                //button_ProtectData.Visible = true;
-
-                DecryptContent();
-                dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + login + "','Decrypted " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
-                isInitialized = true;
-                isEncrypted = false;
-                label_FirstInit.Visible = false;
-                label_DataProtected.Visible = true;
-                this.BackgroundImage = Properties.Resources.tomNewspaper;
-                label_DataProtected.Text = "Можно юзать данные";
-                button_ExitSession.Visible = true;
-                button_DecryptData.Visible = true;
+                    //rawDirectory = selectedDirectory.Remove(0, selectedDirectory.LastIndexOf(@"\") + 1);        // ну и костыли с удалением "\"
 
 
-                listBox_ProtectedDirectories.Visible = false;
-                button_ChangeFolder.Visible = false;
-                button_UnlockChosenDirectory.Visible = false;
-                button_ProtectData.Visible = false;
+                    //button_ProtectData.Visible = true;
+
+                    DecryptContent();
+                    dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + login + "','Decrypted " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+                    isInitialized = true;
+                    isEncrypted = true;
+                    label_FirstInit.Visible = false;
+                    label_DataProtected.Visible = true;
+                    this.BackgroundImage = Properties.Resources.tomNewspaper;
+                    label_DataProtected.Text = "Можно юзать данные";
+                    button_ExitSession.Visible = true;
+                    button_DecryptData.Visible = true;
+
+
+                    listBox_ProtectedDirectories.Visible = false;
+                    button_ChangeFolder.Visible = false;
+                    button_UnlockChosenDirectory.Visible = false;
+                    button_ProtectData.Visible = false;
+                }
+                else {
+                    MessageBox.Show("Директории не существует " + SelectedDirectory, "Ошибка");
+                    SelectedDirectory = null;
+                    directoryPath = null;
+                }
             }
         }
 
