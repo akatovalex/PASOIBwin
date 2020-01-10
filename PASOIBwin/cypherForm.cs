@@ -298,6 +298,7 @@ namespace PASOIBwin {
                 listBox_ProtectedDirectories.Visible = false;
                 button_ChangeFolder.Visible = false;
                 button_UnlockChosenDirectory.Visible = false;
+                button_ProtectData.Visible = false;
             }
         }
 
