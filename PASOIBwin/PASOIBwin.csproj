@@ -117,5 +117,11 @@
   <ItemGroup>
     <None Include="pics\tomNewspaper.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\padlock_closed_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\abstract-blue-geometric-shapes-background_1035-17545.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

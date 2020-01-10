@@ -144,7 +144,7 @@
             this.AcceptButton = this.button_UnlockChosenDirectory;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::PASOIBwin.Properties.Resources.tom;
+            this.BackgroundImage = global::PASOIBwin.Properties.Resources.abstract_blue_geometric_shapes_background_1035_17545;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.button_UnlockChosenDirectory);

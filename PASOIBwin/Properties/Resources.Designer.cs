@@ -63,6 +63,16 @@ namespace PASOIBwin.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap abstract_blue_geometric_shapes_background_1035_17545 {
+            get {
+                object obj = ResourceManager.GetObject("abstract-blue-geometric-shapes-background_1035-17545", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap cube_god_47816942widenowall {
             get {
                 object obj = ResourceManager.GetObject("cube-god-47816942widenowall", resourceCulture);
@@ -76,6 +86,16 @@ namespace PASOIBwin.Properties {
         internal static System.Drawing.Bitmap jerry {
             get {
                 object obj = ResourceManager.GetObject("jerry", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap padlock_closed_2 {
+            get {
+                object obj = ResourceManager.GetObject("padlock_closed_2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
