@@ -103,6 +103,26 @@ namespace PASOIBwin.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap padlock_open_3 {
+            get {
+                object obj = ResourceManager.GetObject("padlock_open_3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap padlock_open_3v2 {
+            get {
+                object obj = ResourceManager.GetObject("padlock_open_3v2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap tom {
             get {
                 object obj = ResourceManager.GetObject("tom", resourceCulture);

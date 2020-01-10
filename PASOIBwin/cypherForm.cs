@@ -134,7 +134,7 @@ namespace PASOIBwin {
                     button_UnlockChosenDirectory.Visible = false;
 
                     button_ExitSession.Visible = true;
-                    this.BackgroundImage = Properties.Resources.tomNewspaper;
+                    this.BackgroundImage = Properties.Resources.padlock_open_3v2;
 
                     button_ChangeFolder.Visible = false;
                     button_ProtectData.Visible = false;
