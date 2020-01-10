@@ -51,12 +51,15 @@
             // 
             // button_ExitSession
             // 
+            this.button_ExitSession.BackColor = System.Drawing.Color.Red;
+            this.button_ExitSession.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.button_ExitSession.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.button_ExitSession.Location = new System.Drawing.Point(266, 372);
             this.button_ExitSession.Name = "button_ExitSession";
             this.button_ExitSession.Size = new System.Drawing.Size(197, 45);
             this.button_ExitSession.TabIndex = 3;
             this.button_ExitSession.Text = "Выйти из сессии и вернуться в главное меню";
-            this.button_ExitSession.UseVisualStyleBackColor = true;
+            this.button_ExitSession.UseVisualStyleBackColor = false;
             this.button_ExitSession.Visible = false;
             this.button_ExitSession.Click += new System.EventHandler(this.button_ExitSession_Click);
             // 
@@ -72,13 +75,15 @@
             // 
             // button_ChangeFolder
             // 
+            this.button_ChangeFolder.BackColor = System.Drawing.Color.Blue;
             this.button_ChangeFolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 28.25F);
+            this.button_ChangeFolder.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.button_ChangeFolder.Location = new System.Drawing.Point(480, 132);
             this.button_ChangeFolder.Name = "button_ChangeFolder";
             this.button_ChangeFolder.Size = new System.Drawing.Size(54, 51);
             this.button_ChangeFolder.TabIndex = 6;
             this.button_ChangeFolder.Text = "+";
-            this.button_ChangeFolder.UseVisualStyleBackColor = true;
+            this.button_ChangeFolder.UseVisualStyleBackColor = false;
             this.button_ChangeFolder.Click += new System.EventHandler(this.button_ChangeFolder_Click);
             // 
             // folderBrowserDialog1
@@ -87,23 +92,27 @@
             // 
             // button_ProtectData
             // 
+            this.button_ProtectData.BackColor = System.Drawing.Color.Blue;
+            this.button_ProtectData.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.button_ProtectData.Location = new System.Drawing.Point(620, 132);
             this.button_ProtectData.Name = "button_ProtectData";
             this.button_ProtectData.Size = new System.Drawing.Size(168, 51);
             this.button_ProtectData.TabIndex = 7;
             this.button_ProtectData.Text = "Защитить новые данные (Надо рассмотреть случай, когда каталог уже есть в БД)";
-            this.button_ProtectData.UseVisualStyleBackColor = true;
+            this.button_ProtectData.UseVisualStyleBackColor = false;
             this.button_ProtectData.Visible = false;
             this.button_ProtectData.Click += new System.EventHandler(this.button_ProtectData_Click);
             // 
             // button_DecryptData
             // 
-            this.button_DecryptData.Location = new System.Drawing.Point(575, 349);
+            this.button_DecryptData.BackColor = System.Drawing.Color.Blue;
+            this.button_DecryptData.ForeColor = System.Drawing.Color.White;
+            this.button_DecryptData.Location = new System.Drawing.Point(575, 361);
             this.button_DecryptData.Name = "button_DecryptData";
             this.button_DecryptData.Size = new System.Drawing.Size(213, 56);
             this.button_DecryptData.TabIndex = 8;
             this.button_DecryptData.Text = "Удалить каталог из защищаемых и вернуться в главное меню";
-            this.button_DecryptData.UseVisualStyleBackColor = true;
+            this.button_DecryptData.UseVisualStyleBackColor = false;
             this.button_DecryptData.Visible = false;
             this.button_DecryptData.Click += new System.EventHandler(this.Button_DecryptData_Click);
             // 
@@ -120,13 +129,14 @@
             // 
             // button_UnlockChosenDirectory
             // 
+            this.button_UnlockChosenDirectory.BackColor = System.Drawing.Color.Lime;
             this.button_UnlockChosenDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
             this.button_UnlockChosenDirectory.Location = new System.Drawing.Point(84, 298);
             this.button_UnlockChosenDirectory.Name = "button_UnlockChosenDirectory";
             this.button_UnlockChosenDirectory.Size = new System.Drawing.Size(379, 57);
             this.button_UnlockChosenDirectory.TabIndex = 10;
             this.button_UnlockChosenDirectory.Text = "Получить доступ к выбранной директории";
-            this.button_UnlockChosenDirectory.UseVisualStyleBackColor = true;
+            this.button_UnlockChosenDirectory.UseVisualStyleBackColor = false;
             this.button_UnlockChosenDirectory.Click += new System.EventHandler(this.Button_UnlockChosenDirectory_Click);
             // 
             // CypherForm
