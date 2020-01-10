@@ -65,7 +65,7 @@ namespace PASOIBwin {
             dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + SelectedDirectory + @"\" + "'");
         }
 
-        public CypherForm(bool isAdmin, byte[] encryptionKey, SecurityAPI.DataBase dbJ, string login) {
+        public CypherForm(bool isAdmin, byte[] usbHash, byte[] encryptionKey, SecurityAPI.DataBase dbJ, string login) {
             InitializeComponent();
             //folderBrowserDialog1.SelectedPath = Directory.GetCurrentDirectory() + @"\testDirectory\";    // Если мешает, закомменть, мне удобней
             //listBox_ProtectedDirectories.Items.Add(Directory.GetCurrentDirectory() + @"\testDirectory\");
@@ -74,8 +74,9 @@ namespace PASOIBwin {
             sqlPathDirectories = "‪protectedfiles.sqlite";
             dbDirectories = new SecurityAPI.DataBase(sqlPathDirectories);
 
-            keyHash = "df6670833b208a10561f74be3f79a279";    //Данный хэш надо считывать с флешки, рядом с ключом для дешифрования каталогов
+            //keyHash = "df6670833b208a10561f74be3f79a279";    //Данный хэш надо считывать с флешки, рядом с ключом для дешифрования каталогов
 
+            keyHash = Encoding.UTF8.GetString(usbHash);
             RefreshListBox();
 
             aesKey = encryptionKey;

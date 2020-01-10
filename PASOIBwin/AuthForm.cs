@@ -14,14 +14,21 @@ using System.IO;
 
 namespace PASOIBwin {
     public partial class AuthForm : Form {
-
+        const int hashSize = 32;
         const string keyFileName = "CryptoData.txt"; //на флешке
         public string sqlPath;
         SecurityAPI.DataBase datab;
         DataTable dataT;
         Timer USBTimer;
+        byte[] hash = new byte[hashSize];
         byte[] key = new byte[32];
+        byte[] defaultKey = new byte[] { 201, 193, 179, 215, 1, 255, 234, 83, 217, 75, 198, 92, 199,
+            88, 42, 244, 20, 166, 0, 39, 224, 106, 140, 225, 104, 245, 247, 17, 150, 187, 203, 252 };
 
+        MemoryStream DecryptKeyFile(string path) {
+            byte[] data = File.ReadAllBytes(path);
+            return new MemoryStream(Encrypting.FromAes256(data, defaultKey));
+        }
         //0 - нет флешки
         //1 - все в порядке
         //минус 1 - флешка есть, но без ключа
@@ -32,7 +39,8 @@ namespace PASOIBwin {
                     if (getKey) {
                         string keyFilePath = device.Name + keyFileName;
                         if (File.Exists(keyFilePath)) {
-                            FileStream stream = File.OpenRead(keyFilePath);
+                            MemoryStream stream = DecryptKeyFile(keyFilePath);
+                            stream.Read(hash, 0, 32);
                             stream.Position = 34;
                             stream.Read(key, 0, 32);
                             stream.Close();
@@ -103,7 +111,7 @@ namespace PASOIBwin {
                         datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + textBoxLogin.Text + "','Succesful authentication','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
                         Hide();
                         USBTimer.Stop();    //Если поставить это до this.Hide, то таймер вырубается и сразу врубается обратно из-за AuthForm_Shown
-                        CypherForm cypherForm = new CypherForm(userRole, key, datab, textBoxLogin.Text);
+                        CypherForm cypherForm = new CypherForm(userRole, hash, key, datab, textBoxLogin.Text);
                         cypherForm.ShowDialog();
                         datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('0', '" + textBoxLogin.Text + "','Logoff','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
                         Show();
