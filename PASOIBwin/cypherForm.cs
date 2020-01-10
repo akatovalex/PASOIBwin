@@ -229,7 +229,7 @@ namespace PASOIBwin {
 
         private void button_ProtectData_Click(object sender, EventArgs e) {
             EncryptContentInitial();
-            dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + login + "','New encrypted directory: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+            dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('4', '" + login + "','New encrypted directory: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
             //button_ChangeFolder.Visible = false;
             //button_ProtectData.Visible = false;
             //button_UnlockChosenDirectory.Visible = false;
@@ -257,7 +257,7 @@ namespace PASOIBwin {
 
         private void button_ExitSession_Click(object sender, EventArgs e) {
             EncryptContent();
-            dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + login + "','Encrypted: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+            dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('2', '" + login + "','Encrypted: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
             label_DataProtected.Text = "Данные защищены";
             this.BackgroundImage = Properties.Resources.tom;
             //button_UnlockData.Visible = true;
@@ -324,7 +324,7 @@ namespace PASOIBwin {
             label_FirstInit.Text = "Каталог не выбран";
 
             DeleteSelectedDirectoryFromDB();
-            dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + login + "','Directory is decrypted and deleted from the DB: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+            dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('5', '" + login + "','Directory is decrypted and deleted from the DB: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
 
             RefreshListBox();
 
@@ -345,7 +345,7 @@ namespace PASOIBwin {
                 if (Directory.Exists(path)) {
                     SelectedDirectory = path;
                     DecryptContent();
-                    dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + login + "','Decrypted " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+                    dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('3', '" + login + "','Decrypted " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
                     isInitialized = true;
                     isEncrypted = true;
                     label_FirstInit.Visible = false;
