@@ -87,7 +87,7 @@ namespace PASOIBwin {
         }
 
 
-        private void Button1_Click(object sender, EventArgs e) {
+        private void button_LogIn_Click(object sender, EventArgs e) {
             bool authTrue = false;
 
             //MessageBox.Show("Галочка!", "Зелёная!");

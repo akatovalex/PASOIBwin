@@ -47,7 +47,7 @@
             this.buttonAuth.TabIndex = 2;
             this.buttonAuth.Text = "Аутентификация";
             this.buttonAuth.UseVisualStyleBackColor = true;
-            this.buttonAuth.Click += new System.EventHandler(this.Button1_Click);
+            this.buttonAuth.Click += new System.EventHandler(this.button_LogIn_Click);
             // 
             // textBoxPassword
             // 
