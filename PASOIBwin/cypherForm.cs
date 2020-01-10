@@ -27,6 +27,8 @@ namespace PASOIBwin {
         SecurityAPI.DataBase dbDirectories;
         DataTable dtDirectories;
 
+        SecurityAPI.DataBase dbJournal;
+        string login;
 
         static string ValidateLastSlash(string path) {
             if (path.LastIndexOf(@"\") != path.Length - 1)
@@ -34,7 +36,7 @@ namespace PASOIBwin {
             return path;
         }
 
-        public CypherForm(bool isAdmin, byte[] encryptionKey) {
+        public CypherForm(bool isAdmin, byte[] encryptionKey, SecurityAPI.DataBase dbJ, string login) {
             InitializeComponent();
             //folderBrowserDialog1.SelectedPath = Directory.GetCurrentDirectory() + @"\testDirectory\";    // Если мешает, закомменть, мне удобней
             //listBox_ProtectedDirectories.Items.Add(Directory.GetCurrentDirectory() + @"\testDirectory\");
@@ -50,6 +52,9 @@ namespace PASOIBwin {
             aesKey = encryptionKey;
             //if (!isAdmin)
             //GoToUserUI();
+
+            dbJournal = dbJ;
+            this.login = login;
         }
 
         void GoToAdminUI() {
@@ -152,6 +157,7 @@ namespace PASOIBwin {
 
         private void button_ProtectData_Click(object sender, EventArgs e) {
             EncryptContentInitial();
+            dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + login + "','New encrypted directory: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
             //button_ChangeFolder.Visible = false;
             //button_ProtectData.Visible = false;
             //button_UnlockChosenDirectory.Visible = false;
@@ -181,6 +187,7 @@ namespace PASOIBwin {
 
         private void button_ExitSession_Click(object sender, EventArgs e) {
             EncryptContent();
+            dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + login + "','Encrypted: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
             label_DataProtected.Text = "Данные защищены";
             this.BackgroundImage = Properties.Resources.tom;
             //button_UnlockData.Visible = true;
@@ -256,6 +263,7 @@ namespace PASOIBwin {
             button_DecryptData.Visible = false;
 
             dbDirectories.ExecuteCommand("DELETE FROM directories WHERE path='" + (SelectedDirectory.Remove(SelectedDirectory.Length - 1)) + "'");
+            dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + login + "','Directory is decrypted and deleted from the DB: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
 
             RefreshListBox();
 
@@ -285,6 +293,7 @@ namespace PASOIBwin {
                 //button_ProtectData.Visible = true;
 
                 DecryptContent();
+                dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + login + "','Decrypted " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
                 isInitialized = true;
                 isEncrypted = false;
                 label_FirstInit.Visible = false;
