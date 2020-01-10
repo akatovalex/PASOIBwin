@@ -109,6 +109,8 @@ namespace PASOIBwin {
                 switch (UsbCheck(true)) {
                     case 1:
                         datab.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('1', '" + textBoxLogin.Text + "','Succesful authentication','" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
+                        textBoxLogin.Text = string.Empty;
+                        textBoxPassword.Text = string.Empty;
                         Hide();
                         USBTimer.Stop();    //Если поставить это до this.Hide, то таймер вырубается и сразу врубается обратно из-за AuthForm_Shown
                         CypherForm cypherForm = new CypherForm(userRole, hash, key, datab, textBoxLogin.Text);
@@ -141,11 +143,11 @@ namespace PASOIBwin {
 
         }
 
-        private void AuthForm_FirstShown(object sender, EventArgs e) {
-            // УДАЛИТЬ ПОТОМ
-            textBoxLogin.Text = "admin";
-            textBoxPassword.Text = "admin";
-        }
+        //private void AuthForm_FirstShown(object sender, EventArgs e) {
+        //    // УДАЛИТЬ ПОТОМ
+        //    textBoxLogin.Text = "admin";
+        //    textBoxPassword.Text = "admin";
+        //}
 
         private void AuthForm_Shown(object sender, EventArgs a) {
             USBTimer.Start();

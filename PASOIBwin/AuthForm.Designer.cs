@@ -130,7 +130,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Аутентификация";
             this.Load += new System.EventHandler(this.AuthForm_Load);
-            this.Shown += new System.EventHandler(this.AuthForm_FirstShown);
+            this.Shown += new System.EventHandler(this.AuthForm_Shown);
             this.VisibleChanged += new System.EventHandler(this.AuthForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();

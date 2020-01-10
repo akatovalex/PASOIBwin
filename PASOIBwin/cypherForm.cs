@@ -174,35 +174,26 @@ namespace PASOIBwin {
             DrawUI("FirstInit");
         }
 
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e) {
+        private void Form1_FormClosed(object sender, FormClosedEventArgs exception) {
             //Штатное завершение:
             //при закрытии зашифровать и удалить резервную копию
             //Экстренное завершение:
             //удалить защищаемую папку и оставить резервную копию
-            if (isInitialized) {
+            if (isInitialized && Directory.Exists(SelectedDirectory.Path)) {
                 if (SelectedDirectory.IsEncrypted) {
                     if (Directory.Exists(RawDirectory))
                         Directory.Delete(RawDirectory, true);
                 }
                 else {
-                    var reason = e.CloseReason;
-                    if (Directory.Exists(SelectedDirectory.Path)) {
-                        if (reason == CloseReason.TaskManagerClosing)
-                            Directory.Delete(SelectedDirectory.Path);
-                        else {
-                            EncryptContent();
-                            if (Directory.Exists(RawDirectory))
-                                Directory.Delete(RawDirectory, true);
-                        }
+                    if (exception.CloseReason == CloseReason.UserClosing) {
+                        EncryptContent();
+                        if (Directory.Exists(RawDirectory))
+                            Directory.Delete(RawDirectory, true);
                     }
-                    else {
-                        //sanya nagovnokodil
-                    }
-
+                    else 
+                        Directory.Delete(SelectedDirectory.Path);
                 }
             }
-            var reason1 = e.CloseReason;
-            MessageBox.Show(reason1.ToString());
         }
 
         private void button_ChangeFolder_Click(object sender, EventArgs e) {

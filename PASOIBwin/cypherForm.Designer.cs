@@ -98,7 +98,7 @@
             this.button_ProtectData.Name = "button_ProtectData";
             this.button_ProtectData.Size = new System.Drawing.Size(168, 51);
             this.button_ProtectData.TabIndex = 7;
-            this.button_ProtectData.Text = "Защитить новые данные (Надо рассмотреть случай, когда каталог уже есть в БД)";
+            this.button_ProtectData.Text = "Защитить новые данные";
             this.button_ProtectData.UseVisualStyleBackColor = false;
             this.button_ProtectData.Visible = false;
             this.button_ProtectData.Click += new System.EventHandler(this.button_ProtectData_Click);
