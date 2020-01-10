@@ -13,9 +13,8 @@ using System.Windows.Forms;
 
 namespace PASOIBwin {
     public partial class CypherForm : Form {
-        string SelectedDirectory { get; set; }
-        string RawDirectory { get { return SelectedDirectory?.Remove(0, SelectedDirectory.LastIndexOf(@"\") + 1); } }       //Мб не работает, мне выдало пустую строку
-        bool isEncrypted = false;
+        EncryptingDirectory SelectedDirectory { get; set; }
+        string RawDirectory { get { return SelectedDirectory?.Path.Remove(0, SelectedDirectory.Path.LastIndexOf(@"\") + 1); } }
         bool isInitialized = false;
         byte[] aesKey = new byte[] { 201, 193, 179, 215, 1, 255, 234, 83, 217, 75, 198, 92, 199,
             88, 42, 244, 20, 166, 0, 39, 224, 106, 140, 225, 104, 245, 247, 17, 150, 187, 203, 252 };
@@ -27,8 +26,8 @@ namespace PASOIBwin {
         DataTable dtDirectories;
 
         SecurityAPI.DataBase dbJournal;
-        string login;
-        bool isAdmin;
+        readonly string login;
+        readonly bool isAdmin;
 
         static string ValidateLastSlash(string path) {
             if (path.LastIndexOf(@"\") != path.Length - 1)
@@ -86,6 +85,7 @@ namespace PASOIBwin {
             dbJournal = dbJ;
             this.login = login;
             this.isAdmin = isAdmin;
+            SelectedDirectory = new EncryptingDirectory();
 
             //if (!isAdmin) {
             //    button_ChangeFolder.Enabled = false;
@@ -179,15 +179,15 @@ namespace PASOIBwin {
             //Экстренное завершение:
             //удалить защищаемую папку и оставить резервную копию
             if (isInitialized) {
-                if (isEncrypted) {
+                if (SelectedDirectory.IsEncrypted) {
                     if (Directory.Exists(RawDirectory))
                         Directory.Delete(RawDirectory, true);
                 }
                 else {
                     var reason = e.CloseReason;
-                    if (Directory.Exists(SelectedDirectory)) {
+                    if (Directory.Exists(SelectedDirectory.Path)) {
                         if (reason == CloseReason.TaskManagerClosing)
-                            Directory.Delete(SelectedDirectory);
+                            Directory.Delete(SelectedDirectory.Path);
                         else {
                             EncryptContent();
                             if (Directory.Exists(RawDirectory))
@@ -211,7 +211,7 @@ namespace PASOIBwin {
             if (!string.IsNullOrEmpty(directoryPath) && !IsSelectedPathInDB(directoryPath)) {
                 //Чтобы случайно не зашифровать себе локальный диск
                 if (directoryPath.Length > 4) {
-                    SelectedDirectory = directoryPath;
+                    SelectedDirectory.Path = directoryPath;
                     label_FirstInit.Visible = true;
                     label_FirstInit.Text = "Текущий защищаемый путь: " + SelectedDirectory;
                     DrawUI("NewDirectoryChosen");
@@ -260,11 +260,8 @@ namespace PASOIBwin {
             dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('2', '" + login + "','Encrypted: " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
             label_DataProtected.Text = "Данные защищены";
             this.BackgroundImage = Properties.Resources.tom;
-            //button_UnlockData.Visible = true;
 
-            //isEncrypted = true;
-
-            isEncrypted = false; //DEBUG (больше не нужна)
+            SelectedDirectory.IsEncrypted = true;
 
             DrawUI("MainMenu");
         }
@@ -283,13 +280,13 @@ namespace PASOIBwin {
                 mode(file);
         }
         void EncryptContentInitial() {
-            EncryptContentBase(SelectedDirectory, f => EncryptFileBase(f, File.ReadAllBytes(f), d => Encrypting.ToAes256(d, aesKey)), false);
+            EncryptContentBase(SelectedDirectory.Path, f => EncryptFileBase(f, File.ReadAllBytes(f), d => Encrypting.ToAes256(d, aesKey)), false);
         }
         void EncryptContent() {
             EncryptContentInitial();
         }
         void DecryptContent() {
-            EncryptContentBase(SelectedDirectory, f => DecryptFile(f), true);
+            EncryptContentBase(SelectedDirectory.Path, f => DecryptFile(f), true);
         }
         void EncryptFileBase(string fileName, byte[] data, Func<byte[], byte[]> transformation) {
             using (FileStream stream = new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite)) {
@@ -311,7 +308,7 @@ namespace PASOIBwin {
         }
 
         private void Button_DecryptData_Click(object sender, EventArgs e) {
-            isEncrypted = false;
+            SelectedDirectory.IsEncrypted = false;
 
 
 
@@ -343,11 +340,11 @@ namespace PASOIBwin {
                 string path = listBox_ProtectedDirectories.SelectedItem.ToString();
                 path = path.Remove(path.Length - 1);
                 if (Directory.Exists(path)) {
-                    SelectedDirectory = path;
+                    SelectedDirectory.Path = path;
                     DecryptContent();
                     dbJournal.ExecuteCommand("INSERT INTO journal (code,login,description,time) VALUES ('3', '" + login + "','Decrypted " + SelectedDirectory + " ', '" + (DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss.fff") + "')");
                     isInitialized = true;
-                    isEncrypted = false;
+                    SelectedDirectory.IsEncrypted = false;
                     label_FirstInit.Visible = false;
                     label_DataProtected.Visible = true;
                     this.BackgroundImage = Properties.Resources.tomNewspaper;
